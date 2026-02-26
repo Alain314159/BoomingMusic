@@ -58,6 +58,11 @@ import androidx.media3.session.SessionResult
 import coil3.SingletonImageLoader
 import coil3.request.ImageRequest
 import coil3.size.Scale
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import coil3.toBitmap
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
@@ -116,7 +121,13 @@ class PlaybackService :
     Player.Listener,
     SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private val serviceScope = CoroutineScope(Job() + Main)
+    private val serviceScope = CoroutineScope(
+        SupervisorJob() +
+        Dispatchers.Main.immediate +
+        CoroutineExceptionHandler { _, t ->
+            Log.e("PlaybackService", "Coroutine exception in service scope", t)
+        }
+    )
     private val uiHandler = Handler(Looper.getMainLooper())
 
     private val preferences: SharedPreferences by inject()

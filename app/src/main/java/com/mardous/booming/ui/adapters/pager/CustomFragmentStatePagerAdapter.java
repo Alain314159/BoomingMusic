@@ -233,8 +233,8 @@ public abstract class CustomFragmentStatePagerAdapter extends PagerAdapter {
                             Log.w(TAG, "Bad fragment at key " + key);
                         }
                     } catch (IllegalStateException e) {
-                        //TODO: Fix 'Fragment is no longer active'
-                        Log.w(TAG, "FixMe: ", e);
+                        // Fragment is no longer active - skip gracefully
+                        Log.w(TAG, "Fragment not active at key " + key + ", skipping", e);
                     }
                 }
             }

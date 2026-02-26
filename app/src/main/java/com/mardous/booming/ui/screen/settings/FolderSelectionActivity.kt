@@ -21,6 +21,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -29,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mardous.booming.R
 import com.mardous.booming.data.scanner.FolderSelectionManager
+import com.mardous.booming.data.scanner.MediaScannerManager
 import com.mardous.booming.data.scanner.PermissionManager
 import com.mardous.booming.data.scanner.ScanFolder
 import com.mardous.booming.databinding.ActivityFolderSelectionBinding
@@ -50,6 +52,7 @@ class FolderSelectionActivity : AbsThemeActivity() {
 
     private val folderManager: FolderSelectionManager by inject()
     private val permissionManager: PermissionManager by inject()
+    private val scannerManager: MediaScannerManager by inject()
 
     private val foldersFlow = MutableStateFlow<List<ScanFolder>>(emptyList())
 
@@ -171,9 +174,57 @@ class FolderSelectionActivity : AbsThemeActivity() {
 
         dialog.show()
 
-        // Aquí se integraría con MediaScannerManager para mostrar progreso real
-        dialogView.findViewById<View>(R.id.doneButton).setOnClickListener {
+        val progressIndicator = dialogView.findViewById<com.google.android.material.progressindicator.LinearProgressIndicator>(R.id.scanProgressIndicator)
+        val progressText = dialogView.findViewById<TextView>(R.id.progressText)
+        val currentFileText = dialogView.findViewById<TextView>(R.id.currentFileText)
+        val resultsLayout = dialogView.findViewById<View>(R.id.resultsLayout)
+        val addedText = dialogView.findViewById<TextView>(R.id.addedText)
+        val updatedText = dialogView.findViewById<TextView>(R.id.updatedText)
+        val removedText = dialogView.findViewById<TextView>(R.id.removedText)
+        val doneButton = dialogView.findViewById<View>(R.id.doneButton)
+
+        // Observar estado del escaneo
+        lifecycleScope.launch {
+            scannerManager.scanState.collect { state ->
+                when (state) {
+                    is com.mardous.booming.data.scanner.ScanState.Scanning -> {
+                        progressIndicator.isIndeterminate = true
+                        progressText.text = getString(R.string.scanning_initial)
+                        currentFileText.visibility = View.GONE
+                    }
+                    is com.mardous.booming.data.scanner.ScanState.Progress -> {
+                        progressIndicator.isIndeterminate = false
+                        progressIndicator.setProgress((state.current * 100) / state.total)
+                        progressText.text = "${state.current}/${state.total}"
+                        currentFileText.text = state.fileName
+                        currentFileText.visibility = View.VISIBLE
+                    }
+                    is com.mardous.booming.data.scanner.ScanState.Complete -> {
+                        progressIndicator.hide()
+                        resultsLayout.visibility = View.VISIBLE
+                        addedText.text = "+${state.added} ${getString(R.string.files_added)}"
+                        updatedText.text = "~${state.updated} ${getString(R.string.files_updated)}"
+                        removedText.text = "-${state.removed} ${getString(R.string.files_removed)}"
+                        doneButton.visibility = View.VISIBLE
+                    }
+                    is com.mardous.booming.data.scanner.ScanState.Error -> {
+                        progressIndicator.hide()
+                        progressText.text = state.message
+                        doneButton.visibility = View.VISIBLE
+                    }
+                    else -> {}
+                }
+            }
+        }
+
+        doneButton.setOnClickListener {
             dialog.dismiss()
+            loadFolders() // Recargar lista
+        }
+
+        // Iniciar escaneo
+        lifecycleScope.launch {
+            scannerManager.scanAllFolders()
         }
     }
 

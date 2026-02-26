@@ -246,6 +246,9 @@
     <string name="remove">Remove</string>
     <string name="cancel">Cancel</string>
     <string name="default_folders_only">Default folders only</string>
+    <string name="files_added">files added</string>
+    <string name="files_updated">files updated</string>
+    <string name="files_removed">files removed</string>
     
     <string name="play_info">Play info</string>
     <string name="track_play_counts">Track Play Counts</string>

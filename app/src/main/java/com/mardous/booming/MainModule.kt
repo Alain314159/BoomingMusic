@@ -152,36 +152,37 @@ private val roomModule = module {
             .build()
     }
 
-    factory {
+    // DAOs como single para evitar recrear conexiones (mejora rendimiento)
+    single {
         get<BoomingDatabase>().playlistDao()
     }
 
-    factory {
+    single {
         get<BoomingDatabase>().playCountDao()
     }
 
-    factory {
+    single {
         get<BoomingDatabase>().historyDao()
     }
 
-    factory {
+    single {
         get<BoomingDatabase>().queueDao()
     }
 
-    factory {
+    single {
         get<BoomingDatabase>().inclExclDao()
     }
 
-    factory {
+    single {
         get<BoomingDatabase>().lyricsDao()
     }
 
-    factory {
+    single {
         get<BoomingDatabase>().canvasDao()
     }
 
-    factory {
-        get<BoomingDatabase>().scannedMediaCacheDao()  // Nuevo DAO
+    single {
+        get<BoomingDatabase>().scannedMediaCacheDao()
     }
 }
 
