@@ -213,6 +213,21 @@
     <style name="CustomFontThemeOverlay">
         <item name="fontFamily">@font/googlesansflex</item>
         <item name="android:fontFamily">@font/googlesansflex</item>
+        <item name="android:textViewStyle">@style/CustomFontTextViewStyle</item>
+        <item name="android:buttonStyle">@style/CustomFontButtonStyle</item>
+        <item name="android:editTextStyle">@style/CustomFontEditTextStyle</item>
+    </style>
+
+    <style name="CustomFontTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/googlesansflex</item>
+    </style>
+
+    <style name="CustomFontButtonStyle" parent="android:Widget.Button">
+        <item name="android:fontFamily">@font/googlesansflex</item>
+    </style>
+
+    <style name="CustomFontEditTextStyle" parent="android:Widget.EditText">
+        <item name="android:fontFamily">@font/googlesansflex</item>
     </style>
 
     <style name="CarTheme" parent="Theme.MaterialComponents.Light.NoActionBar">

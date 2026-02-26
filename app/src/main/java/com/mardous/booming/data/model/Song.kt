@@ -106,6 +106,9 @@ open class Song(
                     .setTrackNumber(trackNumber)
                     .setReleaseYear(year)
                     .setDurationMs(duration.coerceAtLeast(0))
+                    // Fix for Issue #279: Add display title and subtitle for lock screen
+                    .setDisplayTitle(title)
+                    .setDisplaySubtitle(artistName)
                     .build()
             )
             .build()
