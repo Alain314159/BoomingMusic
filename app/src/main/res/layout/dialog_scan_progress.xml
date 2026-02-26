@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scanning_library"
+        android:textAppearance="?textAppearanceHeadlineSmall"
+        android:textColor="?colorOnSurface" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/scanning_library_description"
+        android:textAppearance="?textAppearanceBodyMedium"
+        android:textColor="?colorOnSurfaceVariant" />
+
+    <!-- Progress Bar -->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/scanProgressIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:indeterminate="true" />
+
+    <!-- Progress Text -->
+    <TextView
+        android:id="@+id/progressText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textAppearance="?textAppearanceBodyMedium"
+        android:textColor="?colorOnSurface"
+        android:text="@string/scanning_initial" />
+
+    <!-- Current File -->
+    <TextView
+        android:id="@+id/currentFileText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textAppearance="?textAppearanceBodySmall"
+        android:textColor="?colorOnSurfaceVariant"
+        android:maxLines="1"
+        android:ellipsize="start"
+        android:visibility="gone" />
+
+    <!-- Results (shown after completion) -->
+    <LinearLayout
+        android:id="@+id/resultsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/scan_results"
+            android:textAppearance="?textAppearanceTitleMedium"
+            android:textColor="?colorOnSurface" />
+
+        <TextView
+            android:id="@+id/addedText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="?textAppearanceBodyMedium"
+            android:textColor="?colorOnSurface" />
+
+        <TextView
+            android:id="@+id/updatedText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="?textAppearanceBodyMedium"
+            android:textColor="?colorOnSurface" />
+
+        <TextView
+            android:id="@+id/removedText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="?textAppearanceBodyMedium"
+            android:textColor="?colorOnSurface" />
+
+    </LinearLayout>
+
+    <!-- Done Button (shown after completion) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/doneButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="24dp"
+        android:text="@string/done"
+        android:visibility="gone" />
+
+</LinearLayout>

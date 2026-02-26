@@ -217,6 +217,36 @@
     <string name="not_recently_played">Not Recently Played</string>
     <string name="orphaned_songs">Orphaned Songs</string>
     <string name="orphaned_songs_empty">No orphaned songs found. All songs belong to at least one playlist.</string>
+    
+    <!-- Folder Selection & Scanner -->
+    <string name="folder_selection_title">Music Folders</string>
+    <string name="permission_status">Permission Status</string>
+    <string name="permission_status_loading">Checking permissions…</string>
+    <string name="permission_status_granted">Access granted</string>
+    <string name="permission_status_denied">Permission required</string>
+    <string name="select_folders">Select Folders</string>
+    <string name="default_folders">Default Folders</string>
+    <string name="custom_folders">Custom Folders</string>
+    <string name="add_custom_folder">Add Custom Folder</string>
+    <string name="scan_now">Scan Now</string>
+    <string name="no_folders_selected">No folders selected</string>
+    <string name="remove_folder">Remove folder</string>
+    <string name="scanning_library">Scanning Library</string>
+    <string name="scanning_library_description">Please wait while we scan your music folders</string>
+    <string name="scanning_initial">Initializing scan…</string>
+    <string name="scan_results">Scan Results</string>
+    <string name="done">Done</string>
+    <string name="folder_enabled">Folder enabled</string>
+    <string name="folder_disabled">Folder disabled</string>
+    <string name="auto_scan_enabled">Auto-scan enabled</string>
+    <string name="auto_scan_disabled">Auto-scan disabled</string>
+    <string name="folder_added">Folder added</string>
+    <string name="folder_removed">Folder removed</string>
+    <string name="remove_folder_confirm">Remove "%1$s" from scan folders?</string>
+    <string name="remove">Remove</string>
+    <string name="cancel">Cancel</string>
+    <string name="default_folders_only">Default folders only</string>
+    
     <string name="play_info">Play info</string>
     <string name="track_play_counts">Track Play Counts</string>
     <string name="song_stat_never_label">never played</string>

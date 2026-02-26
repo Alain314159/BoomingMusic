@@ -87,6 +87,11 @@
         <activity android:name=".ui.screen.permissions.PermissionsActivity"/>
 
         <activity
+            android:name=".ui.screen.settings.FolderSelectionActivity"
+            android:label="@string/folder_selection_title"
+            android:theme="@style/Theme.Booming.FollowSystem"/>
+
+        <activity
             android:name=".ui.screen.error.ErrorActivity"
             android:exported="true">
             <intent-filter>
