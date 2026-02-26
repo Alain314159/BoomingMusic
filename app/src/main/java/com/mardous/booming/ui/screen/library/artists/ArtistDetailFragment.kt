@@ -232,7 +232,8 @@ class ArtistDetailFragment : AbsMainActivityFragment(R.layout.fragment_artist_de
     }
 
     private fun showArtist(artist: Artist) {
-        if (artist.songCount == 0) {
+        // Validate artist has valid data before displaying
+        if (artist == Artist.empty || artist.songCount == 0 || artist.albums.isEmpty()) {
             findNavController().navigateUp()
             return
         }

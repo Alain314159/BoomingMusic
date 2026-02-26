@@ -21,12 +21,19 @@ class ArtistDetailViewModel(
     fun getArtistDetail(): LiveData<Artist> = _artistDetail
 
     fun loadArtistDetail() = viewModelScope.launch(Dispatchers.IO) {
-        if (!artistName.isNullOrEmpty()) {
-            _artistDetail.postValue(repository.albumArtistByName(artistName))
+        val artist = if (!artistName.isNullOrEmpty()) {
+            repository.albumArtistByName(artistName)
         } else if (artistId != -1L) {
-            _artistDetail.postValue(repository.artistById(artistId))
+            repository.artistById(artistId)
         } else {
+            Artist.empty
+        }
+        
+        // Validate artist before posting to UI
+        if (artist == Artist.empty || (artist.albums.isEmpty() && artist.songs.isEmpty())) {
             _artistDetail.postValue(Artist.empty)
+        } else {
+            _artistDetail.postValue(artist)
         }
     }
 

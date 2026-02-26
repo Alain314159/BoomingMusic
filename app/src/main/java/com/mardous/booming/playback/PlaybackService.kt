@@ -670,6 +670,9 @@ class PlaybackService :
                     persistentStorage.saveState()
                 }
             }
+            Log.d(TAG, "Playback stopped, state=${player.playbackState}, playWhenReady=${player.playWhenReady}")
+        } else {
+            Log.d(TAG, "Playback started")
         }
         equalizerManager.setSessionIsActive(isPlaying)
         songPlayCountHelper.notifyPlayStateChanged(isPlaying)
@@ -941,9 +944,11 @@ class PlaybackService :
                 if (pauseOnZeroVolume && persistentStorage.restorationState.isRestored) {
                     // don't handle volume changes until our player is fully restored
                     if (isPlaying && systemVolume.currentVolume <= 0f) {
+                        Log.d(TAG, "Pausing playback due to zero volume")
                         player.pause()
                         pausedByZeroVolume = true
                     } else if (pausedByZeroVolume && systemVolume.currentVolume >= 0.1f) {
+                        Log.d(TAG, "Resuming playback, volume restored")
                         player.play()
                         pausedByZeroVolume = false
                     }
@@ -1004,15 +1009,27 @@ class PlaybackService :
         override fun onReceive(context: Context, intent: Intent) {
             if (Intent.ACTION_HEADSET_PLUG == intent.action && !isInitialStickyBroadcast) {
                 when (intent.getIntExtra("state", -1)) {
-                    0 -> if (Preferences.isPauseOnDisconnect(false)) {
-                        player.pause()
+                    0 -> {
+                        // Headset unplugged
+                        if (Preferences.isPauseOnDisconnect(false)) {
+                            Log.d(TAG, "Headset unplugged, pausing playback")
+                            player.pause()
+                        }
                     }
                     // Check whether the current song is empty which means the playing queue hasn't restored yet
-                    1 -> if (Preferences.isResumeOnConnect(false)) {
-                        if (player.currentMediaItem != null) {
-                            player.play()
-                        } else {
-                            receivedHeadsetConnected = true
+                    1 -> {
+                        // Headset plugged in
+                        if (Preferences.isResumeOnConnect(false)) {
+                            if (player.currentMediaItem != null && player.isPlaying) {
+                                // Already playing, don't resume again
+                                Log.d(TAG, "Headset connected, already playing")
+                            } else if (player.currentMediaItem != null) {
+                                Log.d(TAG, "Headset connected, resuming playback")
+                                player.play()
+                            } else {
+                                receivedHeadsetConnected = true
+                                Log.d(TAG, "Headset connected, queue not ready yet")
+                            }
                         }
                     }
                 }
@@ -1021,6 +1038,7 @@ class PlaybackService :
     }
 
     companion object {
+        private const val TAG = "PlaybackService"
         private const val PACKAGE_NAME = "com.mardous.booming"
 
         const val ACTION_TOGGLE_SHUFFLE = "$PACKAGE_NAME.action.ACTION_TOGGLE_SHUFFLE"

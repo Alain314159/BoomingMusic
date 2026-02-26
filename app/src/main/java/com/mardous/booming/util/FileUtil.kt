@@ -17,7 +17,11 @@
 
 package com.mardous.booming.util
 
+import android.content.ContentResolver
+import android.net.Uri
 import android.os.Environment
+import android.util.Log
+import com.kyant.taglib.TagLib
 import com.mardous.booming.appContext
 import org.koin.core.component.KoinComponent
 import java.io.File
@@ -67,6 +71,26 @@ object FileUtil : KoinComponent {
             } else {
                 File("/") // root
             }
+        }
+    }
+
+    /**
+     * Gets the duration of an audio file using TagLib as a fallback when MediaStore returns 0.
+     * This is particularly useful for M4A files that may report 0 duration in MediaStore.
+     *
+     * @param uri The URI of the audio file
+     * @return Duration in milliseconds, or 0 if unable to read
+     */
+    fun getDurationFromTag(uri: Uri): Long {
+        return try {
+            val contentResolver: ContentResolver = appContext().contentResolver
+            contentResolver.openFileDescriptor(uri, "r")?.use { fd ->
+                val audioProperties = TagLib.getAudioProperties(fd.dup().detachFd())
+                audioProperties?.duration?.toLong() ?: 0L
+            } ?: 0L
+        } catch (t: Throwable) {
+            Log.e("DurationReader", "Failed to read duration from tag for $uri", t)
+            0L
         }
     }
 

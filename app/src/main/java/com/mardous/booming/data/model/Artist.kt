@@ -60,11 +60,17 @@ data class Artist(
     }
 
     private fun getArtistName(): String {
-        return safeGetFirstAlbum().safeGetFirstSong().artistName
+        val firstAlbum = safeGetFirstAlbum()
+        if (firstAlbum == Album.empty) return Artist.UNKNOWN
+        val firstSong = firstAlbum.safeGetFirstSong()
+        return firstSong.artistName.ifBlank { Artist.UNKNOWN }
     }
 
     private fun getAlbumArtistName(): String? {
-        return safeGetFirstAlbum().safeGetFirstSong().albumArtistName
+        val firstAlbum = safeGetFirstAlbum()
+        if (firstAlbum == Album.empty) return null
+        val firstSong = firstAlbum.safeGetFirstSong()
+        return firstSong.albumArtistName?.ifBlank { null }
     }
 
     override fun equals(other: Any?): Boolean {

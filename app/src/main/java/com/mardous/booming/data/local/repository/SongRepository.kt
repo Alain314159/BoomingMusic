@@ -29,6 +29,7 @@ import android.provider.MediaStore.Audio.AudioColumns
 import android.provider.OpenableColumns
 import android.util.Log
 import androidx.media3.common.MediaItem
+import java.io.File
 import com.mardous.booming.core.sort.SongSortMode
 import com.mardous.booming.data.local.MediaQueryDispatcher
 import com.mardous.booming.data.local.room.InclExclDao
@@ -41,6 +42,7 @@ import com.mardous.booming.extensions.hasR
 import com.mardous.booming.extensions.utilities.getStringSafe
 import com.mardous.booming.extensions.utilities.mapIfValid
 import com.mardous.booming.extensions.utilities.takeOrDefault
+import com.mardous.booming.util.FileUtil
 import com.mardous.booming.util.Preferences
 import okhttp3.internal.toLongOrDefault
 
@@ -304,7 +306,24 @@ class RealSongRepository(
         val trackNumber = cursor.getInt(cursor.getColumnIndexOrThrow(AudioColumns.TRACK))
         val year = cursor.getInt(cursor.getColumnIndexOrThrow(AudioColumns.YEAR))
         val size = cursor.getLong(cursor.getColumnIndexOrThrow(AudioColumns.SIZE))
-        val duration = cursor.getLong(cursor.getColumnIndexOrThrow(AudioColumns.DURATION))
+        var duration = cursor.getLong(cursor.getColumnIndexOrThrow(AudioColumns.DURATION))
+        
+        // Fix for Issue #290: M4A files reporting 0 duration
+        // Use TagLib as fallback when MediaStore returns 0 duration
+        if (duration <= 0) {
+            try {
+                val uri = Uri.fromFile(File(data))
+                duration = FileUtil.getDurationFromTag(uri)
+                if (duration <= 0) {
+                    // If still 0, use a minimum value to prevent filtering
+                    duration = 1000 // 1 second minimum
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to get duration from tag for $data, using default", e)
+                duration = 1000 // 1 second minimum to prevent filtering
+            }
+        }
+        
         val dateAdded = cursor.getLong(cursor.getColumnIndexOrThrow(AudioColumns.DATE_ADDED))
         val dateModified = cursor.getLong(cursor.getColumnIndexOrThrow(AudioColumns.DATE_MODIFIED))
         val albumId = cursor.getLong(cursor.getColumnIndexOrThrow(AudioColumns.ALBUM_ID))
