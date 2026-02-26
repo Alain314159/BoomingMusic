@@ -21,6 +21,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -156,6 +157,7 @@ class FolderSelectionActivity : AbsThemeActivity() {
                 getString(R.string.permission_status_granted)
             PermissionManager.StorageAccessLevel.MANAGE_ALL ->
                 getString(R.string.permission_status_granted) + " - Full Access"
+            else -> getString(R.string.permission_status_loading)
         }
 
         binding.grantPermissionButton.visibility = if (accessLevel == PermissionManager.StorageAccessLevel.NONE) {
@@ -243,7 +245,7 @@ class FolderSelectionActivity : AbsThemeActivity() {
             val binding = ItemFolderBinding.inflate(
                 layoutInflater, parent, false
             )
-            return FolderViewHolder(binding)
+            return FolderViewHolder(binding, isCustom)
         }
 
         override fun onBindViewHolder(holder: FolderViewHolder, position: Int) {
@@ -254,7 +256,8 @@ class FolderSelectionActivity : AbsThemeActivity() {
     }
 
     inner class FolderViewHolder(
-        private val binding: ItemFolderBinding
+        private val binding: ItemFolderBinding,
+        private val isCustom: Boolean
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(folder: ScanFolder) {

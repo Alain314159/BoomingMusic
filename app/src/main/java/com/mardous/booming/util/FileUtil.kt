@@ -86,7 +86,8 @@ object FileUtil : KoinComponent {
             val contentResolver: ContentResolver = appContext().contentResolver
             contentResolver.openFileDescriptor(uri, "r")?.use { fd ->
                 val audioProperties = TagLib.getAudioProperties(fd.dup().detachFd())
-                audioProperties?.duration?.toLong() ?: 0L
+                // TagLib returns duration in seconds, convert to milliseconds
+                (audioProperties?.length?.toLong() ?: 0L) * 1000
             } ?: 0L
         } catch (t: Throwable) {
             Log.e("DurationReader", "Failed to read duration from tag for $uri", t)

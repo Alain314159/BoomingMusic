@@ -17,6 +17,7 @@
 
 package com.mardous.booming.data.local.repository
 
+import com.mardous.booming.core.BoomingDatabase
 import android.content.Context
 import android.util.Log
 import com.mardous.booming.data.local.room.BoomingDatabase
@@ -51,7 +52,7 @@ class MediaRepository : KoinComponent {
     private val context: Context by inject()
     private val database: BoomingDatabase by inject()
     private val cacheDao: ScannedMediaCacheDao = database.scannedMediaCacheDao()
-    private val songRepository: SongRepository by inject()
+    private val repository: Repository by inject()
     private val scannerManager: MediaScannerManager by inject()
 
     companion object {
@@ -72,11 +73,11 @@ class MediaRepository : KoinComponent {
                 cached.mapNotNull { it.toSong() }
             } else {
                 // Fallback a MediaStore
-                songRepository.songs()
+                repository.songs()
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error getting songs, falling back to MediaStore", e)
-            songRepository.songs()
+            repository.songs()
         }
     }
 
@@ -90,7 +91,7 @@ class MediaRepository : KoinComponent {
             if (cachedList.isNotEmpty()) {
                 cachedList.mapNotNull { it.toSong() }
             } else {
-                songRepository.songs()
+                repository.songs()
             }
         }
     }
@@ -106,7 +107,7 @@ class MediaRepository : KoinComponent {
             if (cachedList.isNotEmpty()) {
                 cachedList.mapNotNull { it.toSong() }
             } else {
-                songRepository.songs(query)
+                repository.songs(query)
             }
         }
     }
@@ -118,7 +119,7 @@ class MediaRepository : KoinComponent {
      * @return Song o null si no existe
      */
     fun getSongById(songId: Long): Song {
-        return songRepository.song(songId)
+        return repository.song(songId)
     }
 
     /**
@@ -136,11 +137,11 @@ class MediaRepository : KoinComponent {
                 cached.toSong()
             } else {
                 // Fallback a MediaStore
-                songRepository.songByFilePath(filePath, ignoreBlacklist = true)
+                repository.songByFilePath(filePath, ignoreBlacklist = true)
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error getting song by path: $filePath", e)
-            songRepository.songByFilePath(filePath, ignoreBlacklist = true)
+            repository.songByFilePath(filePath, ignoreBlacklist = true)
         }
     }
 
@@ -159,7 +160,7 @@ class MediaRepository : KoinComponent {
      * @return Número de canciones en MediaStore
      */
     suspend fun getMediaStoreCount(): Int {
-        return songRepository.songs().size
+        return repository.songs().size
     }
 
     /**
@@ -226,8 +227,8 @@ class MediaRepository : KoinComponent {
      */
     suspend fun getLibraryStats(): LibraryStats {
         val songs = getAllSongs()
-        val albums = songRepository.allAlbums()
-        val artists = songRepository.allArtists()
+        val albums = repository.allAlbums()
+        val artists = repository.allArtists()
 
         val totalDuration = songs.sumOf { it.duration }
         val averageDuration = songs.map { it.duration }.average().toLong()

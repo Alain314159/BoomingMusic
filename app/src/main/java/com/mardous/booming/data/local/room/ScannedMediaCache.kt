@@ -20,6 +20,7 @@ package com.mardous.booming.data.local.room
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
+import androidx.room.PrimaryKey
 
 /**
  * Cache para almacenar resultados del scanner de archivos independiente.
@@ -30,9 +31,9 @@ import androidx.room.Index
 @Entity(
     tableName = "scanned_media_cache",
     indices = [
-        Index(value = ["filePath"], unique = true),
-        Index(value = ["lastModified"]),
-        Index(value = ["isValid"])
+        Index(value = ["file_path"], unique = true),
+        Index(value = ["last_modified"]),
+        Index(value = ["is_valid"])
     ]
 )
 data class ScannedMediaCache(
