@@ -6,9 +6,16 @@ on:
   pull_request:
     branches: [ "master", "stable" ]
 
+# Cancel previous runs if new commit is pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -20,11 +27,32 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run Lint
-        run: ./gradlew lint
+      - name: Clean build
+        run: ./gradlew clean
+
+      - name: Run Lint (fail on warnings)
+        run: ./gradlew lintDebug --no-daemon --stacktrace
+        env:
+          _JAVA_OPTIONS: "-Xmx4g"
+
+      - name: Upload lint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-report
+          path: |
+            **/build/reports/lint-results-*.html
+            **/build/reports/lint-results-*.xml
 
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: check
+    
+    strategy:
+      matrix:
+        variant: [normal, fdroid]
+    
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-java@v4
@@ -33,15 +61,27 @@ jobs:
         distribution: 'zulu'
         cache: gradle
 
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build with Gradle
-      run: ./gradlew assemble
+    - name: Build with Gradle (${{ matrix.variant }})
+      run: ./gradlew assemble${{ matrix.variant == 'normal' && 'Normal' || 'Fdroid' }}Debug --no-daemon --stacktrace
+      env:
+        _JAVA_OPTIONS: "-Xmx4g"
 
-    - name: Upload PR artifacts
+    - name: Verify APK exists
+      run: |
+        find app/build/outputs/apk -name "*.apk" -type f
+        test -f app/build/outputs/apk/${{ matrix.variant }}/debug/app-${{ matrix.variant }}-debug.apk || \
+        test -f app/build/outputs/apk/${{ matrix.variant }}/debug/BoomingMusic-${{ matrix.variant }}-debug.apk
+
+    - name: Upload APK artifacts
       if: github.event_name == 'pull_request'
       uses: actions/upload-artifact@v4
       with:
-        name: release-apk
-        path: app/build/outputs/apk/*/release/BoomingMusic-*-release.apk
+        name: release-apk-${{ matrix.variant }}
+        path: app/build/outputs/apk/${{ matrix.variant }}/debug/*.apk
+        retention-days: 14
