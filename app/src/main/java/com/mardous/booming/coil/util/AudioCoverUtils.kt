@@ -22,7 +22,10 @@ import java.io.InputStream
 
 object AudioCoverUtils {
 
-    // TODO: find a cleaner way to do this
+    /**
+     * Lista de nombres de archivo de portada de álbum comunes para búsqueda fallback.
+     * Se buscan en orden hasta encontrar uno que exista.
+     */
     private val FALLBACKS = arrayOf(
         "cover.jpg",
         "album.jpg",

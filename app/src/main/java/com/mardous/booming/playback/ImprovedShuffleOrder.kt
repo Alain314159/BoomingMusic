@@ -126,7 +126,7 @@ class ImprovedShuffleOrder private constructor(
         if (length == 0 || (indexToExclusive - indexFrom) <= 0)
             return this
 
-        // TODO could this logic be improved?
+        // Move item from indexFrom to newIndexFrom, adjusting other indices accordingly
         val newShuffled = shuffled.toMutableList()
         newShuffled.remove(indexFrom)
         newShuffled.replaceAll { if (it > indexFrom) it - 1 else it }

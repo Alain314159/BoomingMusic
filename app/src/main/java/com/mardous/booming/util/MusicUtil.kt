@@ -74,20 +74,23 @@ object MusicUtil : KoinComponent {
                 context.contentResolver.query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection.toString(), null, null
                 ).use { cursor ->
-                    // TODO: At this point, there is no guarantee that the size of the cursor is the same as the size of the selection string.
+                    // Note: Cursor count should match selection size, but we iterate safely
                     if (cursor != null) {
                         // Step 1: Remove selected tracks from the current playlist, as well
                         // as from the album art cache and the Music Database
                         cursor.moveToFirst()
+                        val totalCount = cursor.count
+                        var currentPosition = 0
+                        
                         while (!cursor.isAfterLast) {
-                            val position = cursor.position + 1
-                            val count = cursor.count
+                            currentPosition++
+                            val count = totalCount
 
                             val id = cursor.getLong(0)
                             val deletedSong = repository.deleteSong(id)
 
                             context.onUI {
-                                onProgress(deletedSong, position.coerceAtMost(count), count)
+                                onProgress(deletedSong, currentPosition.coerceAtMost(count), count)
                             }
 
                             cursor.moveToNext()
