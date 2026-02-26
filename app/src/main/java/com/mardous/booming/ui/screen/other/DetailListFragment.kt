@@ -145,6 +145,7 @@ class DetailListFragment : AbsMainActivityFragment(R.layout.fragment_detail_list
             ContentType.RecentSongs -> lastAddedSongs()
             ContentType.Favorites -> loadFavoriteSongs()
             ContentType.NotRecentlyPlayed -> loadNotRecentlyPlayed()
+            ContentType.OrphanedSongs -> loadOrphanedSongs()
         }
     }
 
@@ -201,6 +202,19 @@ class DetailListFragment : AbsMainActivityFragment(R.layout.fragment_detail_list
         libraryViewModel.notRecentlyPlayedSongs().observe(viewLifecycleOwner) { songs ->
             songAdapter.dataSet = songs
             songs(songs)
+        }
+    }
+
+    private fun loadOrphanedSongs() {
+        val songAdapter = songAdapter()
+        binding.recyclerView.apply {
+            adapter = songAdapter
+            layoutManager = linearLayoutManager()
+            createFastScroller(disablePopup = true)
+        }
+        libraryViewModel.orphanedSongs().observe(viewLifecycleOwner) { songs ->
+            songAdapter.dataSet = songs
+            songs(songs, R.string.orphaned_songs_empty)
         }
     }
 

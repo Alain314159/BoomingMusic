@@ -316,6 +316,10 @@ class LibraryViewModel(
         emit(repository.notRecentlyPlayedSongs())
     }
 
+    fun orphanedSongs(): LiveData<List<Song>> = liveData(IO) {
+        emit(repository.getOrphanedSongs().toSongs())
+    }
+
     fun renamePlaylist(playListId: Long, name: String) = viewModelScope.launch(IO) {
         repository.renamePlaylist(playListId, name)
     }

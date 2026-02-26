@@ -215,6 +215,8 @@
     <string name="top_tracks_label">Top Tracks</string>
     <string name="history_label">History</string>
     <string name="not_recently_played">Not Recently Played</string>
+    <string name="orphaned_songs">Orphaned Songs</string>
+    <string name="orphaned_songs_empty">No orphaned songs found. All songs belong to at least one playlist.</string>
     <string name="play_info">Play info</string>
     <string name="track_play_counts">Track Play Counts</string>
     <string name="song_stat_never_label">never played</string>

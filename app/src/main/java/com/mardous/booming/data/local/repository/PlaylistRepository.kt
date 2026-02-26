@@ -74,6 +74,7 @@ interface PlaylistRepository {
     suspend fun deleteSongFromAllPlaylists(songId: Long)
     suspend fun deleteSongsFromPlaylist(songs: List<SongEntity>)
     suspend fun deleteSongsFromAllPlaylists(songsIds: List<Long>)
+    suspend fun getOrphanedSongs(): List<SongEntity>
 }
 
 class RealPlaylistRepository(
@@ -267,6 +268,10 @@ class RealPlaylistRepository(
         songsIds.chunked(MAX_ITEMS_PER_CHUNK).forEach { chunkIds ->
             playlistDao.deleteSongsFromAllPlaylists(chunkIds)
         }
+    }
+
+    override suspend fun getOrphanedSongs(): List<SongEntity> {
+        return playlistDao.getOrphanedSongs()
     }
 
     @Suppress("DEPRECATION")

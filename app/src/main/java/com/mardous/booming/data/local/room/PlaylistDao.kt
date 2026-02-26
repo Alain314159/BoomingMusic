@@ -109,4 +109,27 @@ interface PlaylistDao {
 
     @Query("SELECT EXISTS(SELECT * FROM SongEntity WHERE id = :songId AND playlist_creator_id = :playlistId)")
     fun checkSongExistInPlaylist(playlistId: Long, songId: Long): Boolean
+
+    // Query to find orphaned songs (songs not in any playlist)
+    @Query("""
+        SELECT * FROM SongEntity 
+        WHERE id NOT IN (
+            SELECT DISTINCT id FROM SongEntity 
+            WHERE playlist_creator_id != 0
+        )
+        ORDER BY title ASC
+    """)
+    suspend fun getOrphanedSongs(): List<SongEntity>
+
+    // Query to get songs with their playlist count
+    @Query("""
+        SELECT 
+            s.*,
+            COUNT(DISTINCT se.playlist_creator_id) as playlist_count
+        FROM SongEntity s
+        LEFT JOIN SongEntity se ON s.id = se.id
+        GROUP BY s.id
+        ORDER BY s.title ASC
+    """)
+    suspend fun getSongsWithPlaylistCount(): List<SongEntity>
 }
