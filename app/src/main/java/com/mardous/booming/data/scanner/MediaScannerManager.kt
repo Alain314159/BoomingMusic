@@ -67,6 +67,10 @@ class MediaScannerManager : KoinComponent {
         private const val TAG = "MediaScannerManager"
         const val WORK_NAME_PERIODIC = "media_scanner_periodic"
         const val WORK_NAME_ONETIME = "media_scanner_onetime"
+        
+        // Configuración de escaneo - Constants para evitar hardcoded values
+        private const val CACHE_CLEANUP_DAYS = 7
+        private const val SCAN_INTERVAL_HOURS = 6L
     }
 
     // Estado del scanner
@@ -192,14 +196,14 @@ class MediaScannerManager : KoinComponent {
      * Limpia entradas inválidas antiguas.
      */
     private suspend fun cleanupInvalidEntries() {
-        // Eliminar entradas que no han sido actualizadas en 7 días
-        val oneWeekAgo = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)
-        cacheDao.purgeInvalid(oneWeekAgo)
+        // Eliminar entradas que no han sido actualizadas en CACHE_CLEANUP_DAYS días
+        val cleanupTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(CACHE_CLEANUP_DAYS)
+        cacheDao.purgeInvalid(cleanupTime)
     }
 
     /**
      * Programa escaneo periódico con WorkManager.
-     * Se ejecuta cada 6 horas cuando el dispositivo está cargando.
+     * Se ejecuta cada SCAN_INTERVAL_HOURS horas cuando el dispositivo está cargando.
      */
     fun schedulePeriodicScan() {
         val constraints = Constraints.Builder()
@@ -208,7 +212,7 @@ class MediaScannerManager : KoinComponent {
             .build()
 
         val workRequest = PeriodicWorkRequestBuilder<MediaScanWorker>(
-            6, TimeUnit.HOURS
+            SCAN_INTERVAL_HOURS, TimeUnit.HOURS
         )
             .setConstraints(constraints)
             .build()
