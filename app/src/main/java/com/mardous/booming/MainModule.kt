@@ -146,7 +146,8 @@ private val roomModule = module {
             .addMigrations(
                 BoomingDatabase.MIGRATION_1_2,
                 BoomingDatabase.MIGRATION_2_3,
-                BoomingDatabase.MIGRATION_3_4
+                BoomingDatabase.MIGRATION_3_4,
+                BoomingDatabase.MIGRATION_4_5  // Nueva migración para ScannedMediaCache
             )
             .build()
     }
@@ -178,9 +179,36 @@ private val roomModule = module {
     factory {
         get<BoomingDatabase>().canvasDao()
     }
+
+    factory {
+        get<BoomingDatabase>().scannedMediaCacheDao()  // Nuevo DAO
+    }
 }
 
 private val dataModule = module {
+    // Scanner independiente (sin MediaStore)
+    single {
+        com.mardous.booming.data.scanner.FileScanner()
+    }
+
+    single {
+        com.mardous.booming.data.scanner.FolderSelectionManager()
+    }
+
+    single {
+        com.mardous.booming.data.scanner.MediaScannerManager()
+    }
+
+    single {
+        com.mardous.booming.data.scanner.PermissionManager()
+    }
+
+    // MediaRepository híbrido (combina cache + MediaStore)
+    single {
+        com.mardous.booming.data.local.repository.MediaRepository()
+    }
+
+    // Repositorios existentes
     single {
         RealRepository(
             context = androidContext(),

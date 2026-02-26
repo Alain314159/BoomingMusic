@@ -55,6 +55,10 @@ class LibraryViewModel(
     private val customPlaylistImageManager: CustomPlaylistImageManager
 ) : ViewModel() {
 
+    // Scanner independiente (inyectado manualmente o usar Koin)
+    // private val mediaRepository: MediaRepository by inject()
+    // Por ahora usamos funciones estáticas si es necesario
+
     init {
         viewModelScope.launch(IO) {
             initializeBlacklist()
@@ -563,6 +567,42 @@ class LibraryViewModel(
             id = intent.getStringExtra(stringKey)?.toLongOrNull() ?: -1
         }
         return id
+    }
+
+    // ========================================================================
+    // Funciones para el scanner independiente (sin MediaStore)
+    // ========================================================================
+
+    /**
+     * Solicita escaneo manual de la biblioteca.
+     * Esto escaneará todas las carpetas habilitadas.
+     */
+    fun requestLibraryScan() {
+        // El escaneo se realiza en background con WorkManager
+        // Esta función es un placeholder para futura integración
+        // viewModelScope.launch(IO) {
+        //     mediaRepository.refreshLibrary()
+        // }
+    }
+
+    /**
+     * Obtiene el estado actual del scanner.
+     */
+    // fun getScanStateFlow() = mediaRepository.getScanState()
+
+    /**
+     * Programa escaneo automático periódico.
+     * Llamar esto cuando el usuario habilita la opción.
+     */
+    fun enableAutoScan() {
+        // mediaRepository.scheduleAutoScan()
+    }
+
+    /**
+     * Desactiva escaneo automático.
+     */
+    fun disableAutoScan() {
+        // mediaRepository.cancelAutoScan()
     }
 }
 
