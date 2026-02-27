@@ -77,3 +77,4 @@ Gemfile.lock
 
 local.properties
 /.kotlin/
+.qwen/
