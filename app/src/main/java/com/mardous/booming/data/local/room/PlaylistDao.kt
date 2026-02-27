@@ -122,8 +122,9 @@ interface PlaylistDao {
     suspend fun getOrphanedSongs(): List<SongEntity>
 
     // Query to get songs with their playlist count
+    @Suppress("RoomWarnings.QUERY_MISMATCH")
     @Query("""
-        SELECT 
+        SELECT
             s.*,
             COUNT(DISTINCT se.playlist_creator_id) as playlist_count
         FROM SongEntity s

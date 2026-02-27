@@ -17,13 +17,11 @@
 
 package com.mardous.booming.data.local.repository
 
-import com.mardous.booming.core.BoomingDatabase
 import android.content.Context
 import android.util.Log
 import com.mardous.booming.data.local.room.BoomingDatabase
 import com.mardous.booming.data.local.room.ScannedMediaCache
 import com.mardous.booming.data.local.room.ScannedMediaCacheDao
-import com.mardous.booming.data.mapper.toSong
 import com.mardous.booming.data.model.Song
 import com.mardous.booming.data.scanner.MediaScannerManager
 import kotlinx.coroutines.flow.Flow
@@ -73,11 +71,11 @@ class MediaRepository : KoinComponent {
                 cached.mapNotNull { it.toSong() }
             } else {
                 // Fallback a MediaStore
-                repository.songs()
+                repository.allSongs()
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error getting songs, falling back to MediaStore", e)
-            repository.songs()
+            repository.allSongs()
         }
     }
 
@@ -91,7 +89,7 @@ class MediaRepository : KoinComponent {
             if (cachedList.isNotEmpty()) {
                 cachedList.mapNotNull { it.toSong() }
             } else {
-                repository.songs()
+                repository.allSongs()
             }
         }
     }
@@ -107,7 +105,7 @@ class MediaRepository : KoinComponent {
             if (cachedList.isNotEmpty()) {
                 cachedList.mapNotNull { it.toSong() }
             } else {
-                repository.songs(query)
+                repository.searchSongs(query)
             }
         }
     }
@@ -119,7 +117,7 @@ class MediaRepository : KoinComponent {
      * @return Song o null si no existe
      */
     fun getSongById(songId: Long): Song {
-        return repository.song(songId)
+        return repository.songById(songId)
     }
 
     /**
@@ -160,7 +158,7 @@ class MediaRepository : KoinComponent {
      * @return Número de canciones en MediaStore
      */
     suspend fun getMediaStoreCount(): Int {
-        return repository.songs().size
+        return repository.allSongs().size
     }
 
     /**
@@ -296,12 +294,12 @@ fun ScannedMediaCache.toSong(): Song? {
         size = fileSize,
         duration = duration ?: 0,
         dateAdded = scanTimestamp / 1000,
-        dateModified = lastModified / 1000,
+        rawDateModified = lastModified / 1000,
         albumId = 0,  // No disponible en cache
         albumName = album ?: "",
         artistId = 0,  // No disponible en cache
         artistName = artist ?: "",
-        albumArtist = albumArtist,
+        albumArtistName = albumArtist,
         genreName = genre
     )
 }

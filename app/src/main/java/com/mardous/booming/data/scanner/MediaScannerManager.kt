@@ -18,6 +18,7 @@
 package com.mardous.booming.data.scanner
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
@@ -28,8 +29,6 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.mardous.booming.data.local.room.BoomingDatabase
-import androidx.work.*
-import com.mardous.booming.core.BoomingDatabase
 import com.mardous.booming.data.local.room.ScannedMediaCache
 import com.mardous.booming.data.local.room.ScannedMediaCacheDao
 import kotlinx.coroutines.Dispatchers

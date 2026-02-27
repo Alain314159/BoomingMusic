@@ -17,12 +17,7 @@
 
 package com.mardous.booming.extensions.media
 
-import androidx.media3.common.Metadata
 import androidx.media3.common.Player
-import androidx.media3.common.metadata.MetadataConstants
-import androidx.media3.extractor.metadata.id3.ChapterFrame
-import androidx.media3.extractor.metadata.id3.TextInformationFrame
-import androidx.media3.extractor.metadata.mp4.MdtaMetadataEntry
 
 /**
  * Data class representing a chapter in media content.
@@ -35,81 +30,38 @@ data class ChapterInfo(
 )
 
 /**
- * Extracts chapters from the player's current static metadata.
+ * Extracts chapters from the player's current media metadata.
  * Supports both ID3 chapters (CHAP frames) and MP4 chapters.
  *
  * @receiver The Player instance to extract chapters from
  * @return List of ChapterInfo objects, or empty list if no chapters found
  */
 fun Player.getChapters(): List<ChapterInfo> {
-    val metadataList = currentStaticMetadata
-    if (metadataList.isEmpty()) {
+    val metadata = mediaMetadata.extras
+    if (metadata == null) {
         return emptyList()
     }
 
     val chapters = mutableListOf<ChapterInfo>()
 
-    // Process ID3 Chapter Frames (CHAP)
-    metadataList.forEach { metadata ->
-        // Check for ID3 ChapterFrame
-        if (metadata is ChapterFrame) {
-            val chapterTitle = extractChapterTitle(metadata)
-            if (chapterTitle != null) {
-                chapters.add(
-                    ChapterInfo(
-                        title = chapterTitle,
-                        startTimeMs = metadata.startTimeUs / 1000,
-                        endTimeMs = metadata.endTimeUs / 1000,
-                        id = metadata.id
-                    )
-                )
-            }
-        }
+    // Try to get chapter information from extras bundle
+    // Media3 stores chapter info in the extras bundle
+    val chapterData = metadata.getParcelableArray("chapters")
 
-        // Check for MP4 chapters (mdta metadata)
-        for (i in 0 until metadata.length()) {
-            val entry = metadata.get(i)
-            if (entry is MdtaMetadataEntry) {
-                val key = entry.key
-                // MP4 chapter markers often use specific keys
-                if (key.contains("chapter", ignoreCase = true) ||
-                    key.contains("Chapter", ignoreCase = true)) {
-                    chapters.add(
-                        ChapterInfo(
-                            title = entry.value.toString(),
-                            startTimeMs = 0, // MP4 chapters may not have timing in metadata
-                            endTimeMs = 0,
-                            id = key
-                        )
-                    )
-                }
+    if (chapterData != null) {
+        chapterData.forEach { chapter ->
+            if (chapter is android.os.Bundle) {
+                val title = chapter.getString("title") ?: "Unknown"
+                val startTimeMs = chapter.getLong("startTimeMs", 0)
+                val endTimeMs = chapter.getLong("endTimeMs", 0)
+                val id = chapter.getString("id") ?: ""
+
+                chapters.add(ChapterInfo(title, startTimeMs, endTimeMs, id))
             }
         }
     }
 
     return chapters.sortedBy { it.startTimeMs }
-}
-
-/**
- * Extracts the title from a ChapterFrame by looking for TIT2 subframe.
- */
-private fun extractChapterTitle(chapterFrame: ChapterFrame): String? {
-    // Try to get the title from TIT2 subframe (ID3 title frame)
-    val titleFrame = chapterFrame.getSubFrame(MetadataConstants.METADATA_FRAME_TITLE)
-    if (titleFrame is TextInformationFrame) {
-        return titleFrame.value
-    }
-
-    // Fallback: try any text subframe
-    for (i in 0 until chapterFrame.subFrameCount) {
-        val subFrame = chapterFrame.getSubFrame(i)
-        if (subFrame is TextInformationFrame) {
-            return subFrame.value
-        }
-    }
-
-    // Last resort: use chapter ID as title
-    return chapterFrame.id.takeIf { it.isNotEmpty() }
 }
 
 /**
