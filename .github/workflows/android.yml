@@ -31,7 +31,7 @@ jobs:
         run: ./gradlew clean
 
       - name: Run Lint (fail on warnings)
-        run: ./gradlew lintDebug --no-daemon --stacktrace
+        run: ./gradlew lint --no-daemon --stacktrace
         env:
           _JAVA_OPTIONS: "-Xmx4g"
 
