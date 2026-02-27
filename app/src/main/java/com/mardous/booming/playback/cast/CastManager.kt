@@ -142,11 +142,14 @@ class CastManager private constructor(
         if (oldPlayer != null && newPlayer != oldPlayer) {
             // Copy current playback state to new player
             newPlayer.apply {
-                setMediaItems(
-                    oldPlayer.currentMediaItems,
-                    oldPlayer.currentMediaItemIndex,
-                    oldPlayer.currentPosition
-                )
+                val currentMediaItem = oldPlayer.currentMediaItem
+                if (currentMediaItem != null) {
+                    setMediaItem(
+                        currentMediaItem,
+                        oldPlayer.currentMediaItemIndex,
+                        oldPlayer.currentPosition
+                    )
+                }
                 playWhenReady = oldPlayer.playWhenReady
                 prepare()
             }

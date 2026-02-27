@@ -178,6 +178,7 @@ dependencies {
     implementation(libs.androidx.core)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.concurrent.futures)
+    implementation(libs.androidx.work)
     implementation(libs.androidx.mediarouter)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.fragment)

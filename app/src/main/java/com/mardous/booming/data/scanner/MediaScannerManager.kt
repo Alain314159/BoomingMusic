@@ -28,7 +28,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.mardous.booming.data.local.room.BoomingDatabase
 import com.mardous.booming.data.local.room.ScannedMediaCache
 import com.mardous.booming.data.local.room.ScannedMediaCacheDao
 import kotlinx.coroutines.Dispatchers
@@ -55,14 +54,13 @@ sealed class ScanState {
  * Manager principal para escaneo de biblioteca de música.
  * Orquesta el escaneo de carpetas, extracción de metadatos y cacheo en Room.
  */
-class MediaScannerManager : KoinComponent {
+class MediaScannerManager(
+    private val cacheDao: ScannedMediaCacheDao
+) : KoinComponent {
 
     private val context: Context by inject()
-    private val database: BoomingDatabase by inject()
     private val fileScanner: FileScanner by inject()
     private val folderManager: FolderSelectionManager by inject()
-
-    private val cacheDao: ScannedMediaCacheDao = database.scannedMediaCacheDao()
 
     companion object {
         private const val TAG = "MediaScannerManager"

@@ -19,8 +19,6 @@ package com.mardous.booming.data.local.repository
 
 import android.content.Context
 import android.util.Log
-import com.mardous.booming.data.local.room.BoomingDatabase
-import com.mardous.booming.data.local.room.ScannedMediaCache
 import com.mardous.booming.data.local.room.ScannedMediaCacheDao
 import com.mardous.booming.data.model.Song
 import com.mardous.booming.data.scanner.MediaScannerManager
@@ -37,7 +35,6 @@ import org.koin.core.component.inject
  * Esto permite una transición gradual sin romper funcionalidad existente.
  *
  * @property context Application context
- * @property database BoomingDatabase para acceso a Room
  * @property cacheDao DAO para acceso al cache de archivos escaneados
  * @property songRepository Repository de canciones MediaStore (fallback)
  * @property scannerManager Manager para escaneo de archivos en background
@@ -45,11 +42,11 @@ import org.koin.core.component.inject
  * @see MediaScannerManager
  * @see ScannedMediaCache
  */
-class MediaRepository : KoinComponent {
+class MediaRepository(
+    private val cacheDao: ScannedMediaCacheDao
+) : KoinComponent {
 
     private val context: Context by inject()
-    private val database: BoomingDatabase by inject()
-    private val cacheDao: ScannedMediaCacheDao = database.scannedMediaCacheDao()
     private val repository: Repository by inject()
     private val scannerManager: MediaScannerManager by inject()
 

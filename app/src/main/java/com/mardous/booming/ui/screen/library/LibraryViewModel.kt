@@ -36,6 +36,7 @@ import com.mardous.booming.data.SongProvider
 import com.mardous.booming.data.local.repository.Repository
 import com.mardous.booming.data.local.room.*
 import com.mardous.booming.data.mapper.toSongEntity
+import com.mardous.booming.data.mapper.toSongs
 import com.mardous.booming.data.mapper.toSongsEntity
 import com.mardous.booming.data.model.*
 import com.mardous.booming.extensions.files.getCanonicalPathSafe

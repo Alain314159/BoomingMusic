@@ -197,7 +197,7 @@ private val dataModule = module {
     }
 
     single {
-        com.mardous.booming.data.scanner.MediaScannerManager()
+        com.mardous.booming.data.scanner.MediaScannerManager(cacheDao = get())
     }
 
     single {
@@ -206,7 +206,7 @@ private val dataModule = module {
 
     // MediaRepository híbrido (combina cache + MediaStore)
     single {
-        com.mardous.booming.data.local.repository.MediaRepository()
+        com.mardous.booming.data.local.repository.MediaRepository(cacheDao = get())
     }
 
     // Repositorios existentes
