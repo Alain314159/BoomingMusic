@@ -28,7 +28,6 @@ navigation = "2.9.7"
 compose = "2026.02.00"
 composeM3 = "1.5.0-alpha14"
 glance = "1.1.1"
-browser = "1.8.0"
 
 koin = "4.1.1"
 coil = "3.3.0"

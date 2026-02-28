@@ -10,8 +10,7 @@ import androidx.room.PrimaryKey
 data class ListenBrainzCredentialsEntity(
     @PrimaryKey val id: Int = 1,
     val userToken: String,
-    val username: String? = null,
-    val lastSyncTimestamp: Long? = null
+    val username: String? = null
 ) {
     /**
      * Convierte a modelo de dominio
