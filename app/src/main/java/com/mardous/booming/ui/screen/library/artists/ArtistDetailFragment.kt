@@ -47,7 +47,6 @@ import com.mardous.booming.data.mapper.searchFilter
 import com.mardous.booming.data.model.Album
 import com.mardous.booming.data.model.Artist
 import com.mardous.booming.data.model.Song
-import com.mardous.booming.data.remote.lastfm.model.LastFmArtist
 import com.mardous.booming.databinding.FragmentArtistDetailBinding
 import com.mardous.booming.extensions.*
 import com.mardous.booming.extensions.media.artistInfo
@@ -82,9 +81,6 @@ class ArtistDetailFragment : AbsMainActivityFragment(R.layout.fragment_artist_de
 
     private var _binding: ArtistDetailBinding? = null
     private val binding get() = _binding!!
-
-    private var lang: String? = null
-    private var biography: String? = null
 
     private lateinit var songAdapter: SimpleSongAdapter
     private lateinit var albumAdapter: AlbumAdapter
@@ -264,37 +260,6 @@ class ArtistDetailFragment : AbsMainActivityFragment(R.layout.fragment_artist_de
 
     private fun loadImage(artist: Artist) {
         binding.image.artistImage(artist) { crossfade(false) }
-    }
-
-    private fun loadBiography(name: String, lang: String? = Locale.getDefault().language) {
-        this.biography = null
-        this.lang = lang
-        detailViewModel.getArtistBio(name, lang, null).observe(viewLifecycleOwner) { result ->
-            if (result is Result.Success) {
-                artistInfo(result.data)
-            }
-        }
-    }
-
-
-    private fun artistInfo(lastFmArtist: LastFmArtist?) {
-        if (lastFmArtist?.artist?.bio != null) {
-            val bioContent = lastFmArtist.artist.bio.content
-            if (bioContent != null && bioContent.trim().isNotEmpty()) {
-                biography = bioContent
-                val biographyView = binding.biography
-                biographyView.show()
-                biographyView.setMarkdownText(bioContent)
-                val biographyTitleView = binding.biographyTitle
-                biographyTitleView.text = getString(R.string.about_x_title, getArtist().name)
-                biographyTitleView.show()
-            }
-        }
-
-        // If the "lang" parameter is set and no biography is given, retry with default language
-        if (biography == null && lang != null) {
-            loadBiography(getArtist().name, null)
-        }
     }
 
     private fun loadSimilarArtists(artist: Artist) {

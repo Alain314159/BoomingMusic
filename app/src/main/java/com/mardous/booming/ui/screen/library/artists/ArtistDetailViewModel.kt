@@ -1,10 +1,8 @@
 package com.mardous.booming.ui.screen.library.artists
 
 import androidx.lifecycle.*
-import com.mardous.booming.core.model.task.Result
 import com.mardous.booming.data.local.repository.Repository
 import com.mardous.booming.data.model.Artist
-import com.mardous.booming.data.remote.lastfm.model.LastFmArtist
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -28,7 +26,7 @@ class ArtistDetailViewModel(
         } else {
             Artist.empty
         }
-        
+
         // Validate artist before posting to UI
         if (artist == Artist.empty || (artist.albums.isEmpty() && artist.songs.isEmpty())) {
             _artistDetail.postValue(Artist.empty)
@@ -41,13 +39,5 @@ class ArtistDetailViewModel(
         emit(repository.similarAlbumArtists(artist).sortedBy { it.name })
     }
 
-    fun getArtistBio(
-        name: String,
-        lang: String?,
-        cache: String?
-    ): LiveData<Result<LastFmArtist>> = liveData(Dispatchers.IO) {
-        emit(Result.Loading)
-        val info = repository.artistInfo(name, lang, cache)
-        emit(info)
-    }
+    // Eliminado: getArtistBio() - Last.fm removido, usar ListenBrainz en su lugar
 }
