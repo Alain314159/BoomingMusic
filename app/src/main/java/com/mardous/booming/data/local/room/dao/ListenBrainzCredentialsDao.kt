@@ -36,10 +36,4 @@ interface ListenBrainzCredentialsDao {
      */
     @Query("DELETE FROM listenbrainz_credentials")
     suspend fun clearCredentials()
-    
-    /**
-     * Actualiza el timestamp del último sync
-     */
-    @Query("UPDATE listenbrainz_credentials SET lastSyncTimestamp = :timestamp WHERE id = 1")
-    suspend fun updateLastSyncTimestamp(timestamp: Long)
 }
