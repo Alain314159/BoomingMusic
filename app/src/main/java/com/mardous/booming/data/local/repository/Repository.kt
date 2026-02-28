@@ -36,9 +36,6 @@ import com.mardous.booming.data.model.search.SearchQuery
 import com.mardous.booming.data.remote.deezer.DeezerService
 import com.mardous.booming.data.remote.deezer.model.DeezerAlbum
 import com.mardous.booming.data.remote.deezer.model.DeezerTrack
-import com.mardous.booming.data.remote.lastfm.LastFmService
-import com.mardous.booming.data.remote.lastfm.model.LastFmAlbum
-import com.mardous.booming.data.remote.lastfm.model.LastFmArtist
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
@@ -138,8 +135,6 @@ interface Repository {
     suspend fun searchGenres(query: String): List<Genre>
     suspend fun deezerTrack(artist: String, title: String): Result<DeezerTrack>
     suspend fun deezerAlbum(artist: String, name: String): Result<DeezerAlbum>
-    suspend fun artistInfo(name: String, lang: String?, cache: String?): Result<LastFmArtist>
-    suspend fun albumInfo(artist: String, album: String, lang: String?): Result<LastFmAlbum>
     suspend fun contributors(): List<Contribution>
     suspend fun translators(): List<Contribution>
 }
@@ -147,7 +142,6 @@ interface Repository {
 class RealRepository(
     private val context: Context,
     private val deezerService: DeezerService,
-    private val lastFmService: LastFmService,
     private val songRepository: SongRepository,
     private val albumRepository: AlbumRepository,
     private val artistRepository: ArtistRepository,
@@ -453,30 +447,6 @@ class RealRepository(
     override suspend fun deezerAlbum(artist: String, name: String): Result<DeezerAlbum> {
         return try {
             Success(deezerService.album(artist, name))
-        } catch (e: Exception) {
-            Error(e)
-        }
-    }
-
-    override suspend fun artistInfo(
-        name: String,
-        lang: String?,
-        cache: String?
-    ): Result<LastFmArtist> {
-        return try {
-            Success(lastFmService.artistInfo(name, lang, cache))
-        } catch (e: Exception) {
-            Error(e)
-        }
-    }
-
-    override suspend fun albumInfo(
-        artist: String,
-        album: String,
-        lang: String?
-    ): Result<LastFmAlbum> {
-        return try {
-            Success(lastFmService.albumInfo(album, artist, lang))
         } catch (e: Exception) {
             Error(e)
         }

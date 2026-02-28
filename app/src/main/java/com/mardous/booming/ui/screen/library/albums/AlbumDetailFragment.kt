@@ -43,7 +43,6 @@ import com.mardous.booming.core.sort.SortMode
 import com.mardous.booming.data.mapper.searchFilter
 import com.mardous.booming.data.model.Album
 import com.mardous.booming.data.model.Song
-import com.mardous.booming.data.remote.lastfm.model.LastFmAlbum
 import com.mardous.booming.databinding.FragmentAlbumDetailBinding
 import com.mardous.booming.extensions.*
 import com.mardous.booming.extensions.media.asReadableDuration
@@ -85,8 +84,6 @@ class AlbumDetailFragment : AbsMainActivityFragment(R.layout.fragment_album_deta
     private lateinit var simpleSongAdapter: SimpleSongAdapter
 
     private var albumArtistExists = false
-    private var lang: String? = null
-    private var biography: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,12 +133,6 @@ class AlbumDetailFragment : AbsMainActivityFragment(R.layout.fragment_album_deta
         }
         binding.searchAction?.setOnClickListener {
             goToSearch()
-        }
-
-        binding.wiki.apply {
-            setOnClickListener {
-                maxLines = (if (maxLines == 4) Integer.MAX_VALUE else 4)
-            }
         }
 
         detailViewModel.loadAlbumDetail()
@@ -232,16 +223,6 @@ class AlbumDetailFragment : AbsMainActivityFragment(R.layout.fragment_album_deta
         }
     }
 
-    private fun loadWiki(album: Album, lang: String? = Locale.getDefault().language) {
-        this.biography = null
-        this.lang = lang
-        detailViewModel.getAlbumWiki(album, lang).observe(viewLifecycleOwner) { result ->
-            if (result is Result.Success) {
-                aboutAlbum(result.data)
-            }
-        }
-    }
-
     private fun moreAlbums(albums: List<Album>) {
         if (albums.isNotEmpty()) {
             binding.similarAlbumRecyclerView.isVisible = true
@@ -259,26 +240,6 @@ class AlbumDetailFragment : AbsMainActivityFragment(R.layout.fragment_album_deta
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             binding.similarAlbumRecyclerView.adapter = albumAdapter
             binding.similarAlbumRecyclerView.destroyOnDetach()
-        }
-    }
-
-    private fun aboutAlbum(lastFmAlbum: LastFmAlbum) {
-        val albumValue = lastFmAlbum.album
-        if (albumValue != null) {
-            val wikiTitle = binding.wikiTitle
-            val wikiView = binding.wiki
-            if (!albumValue.wiki?.content.isNullOrEmpty()) {
-                biography = albumValue.wiki.content
-                wikiView.show()
-                wikiView.setMarkdownText(biography!!)
-                wikiTitle.text = getString(R.string.about_x_title, getAlbum().name)
-                wikiTitle.show()
-            }
-        }
-
-        // If the "lang" parameter is set and no biography is given, retry with default language
-        if (biography == null && lang != null) {
-            loadWiki(getAlbum(), null)
         }
     }
 

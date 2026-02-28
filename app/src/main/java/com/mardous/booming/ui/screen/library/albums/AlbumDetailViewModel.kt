@@ -1,10 +1,8 @@
 package com.mardous.booming.ui.screen.library.albums
 
 import androidx.lifecycle.*
-import com.mardous.booming.core.model.task.Result
 import com.mardous.booming.data.local.repository.Repository
 import com.mardous.booming.data.model.Album
-import com.mardous.booming.data.remote.lastfm.model.LastFmAlbum
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -25,10 +23,4 @@ class AlbumDetailViewModel(private val repository: Repository, private val album
             if (it.isNotEmpty()) emit(it)
         }
     }
-
-    fun getAlbumWiki(album: Album, lang: String?): LiveData<Result<LastFmAlbum>> =
-        liveData(Dispatchers.IO) {
-            emit(Result.Loading)
-            emit(repository.albumInfo(album.albumArtistName ?: album.artistName, album.name, lang))
-        }
 }
