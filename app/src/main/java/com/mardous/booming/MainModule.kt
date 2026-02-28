@@ -51,7 +51,6 @@ import com.mardous.booming.data.remote.deezer.DeezerService
 import com.mardous.booming.di.listenBrainzModule
 import com.mardous.booming.data.remote.github.GitHubService
 import com.mardous.booming.data.remote.jsonHttpClient
-import com.mardous.booming.data.remote.lastfm.LastFmService
 import com.mardous.booming.data.remote.lyrics.LyricsDownloadService
 import com.mardous.booming.data.remote.provideOkHttp
 import com.mardous.booming.playback.SleepTimer
@@ -92,9 +91,6 @@ val networkModule = module {
     }
     single {
         DeezerService(client = get())
-    }
-    single {
-        LastFmService(client = get())
     }
     single {
         LyricsDownloadService(client = get())
@@ -215,7 +211,6 @@ private val dataModule = module {
         RealRepository(
             context = androidContext(),
             deezerService = get(),
-            lastFmService = get(),
             songRepository = get(),
             albumRepository = get(),
             artistRepository = get(),
