@@ -98,8 +98,7 @@ abstract class BoomingDatabase : RoomDatabase() {
                     CREATE TABLE IF NOT EXISTS `listenbrainz_credentials` (
                         `id` INTEGER PRIMARY KEY NOT NULL DEFAULT 1,
                         `userToken` TEXT NOT NULL,
-                        `username` TEXT,
-                        `lastSyncTimestamp` INTEGER
+                        `username` TEXT
                     )
                 """)
                 
