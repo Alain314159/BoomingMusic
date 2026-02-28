@@ -48,6 +48,7 @@ import com.mardous.booming.data.local.repository.SongRepository
 import com.mardous.booming.data.local.repository.SpecialRepository
 import com.mardous.booming.data.model.Genre
 import com.mardous.booming.data.remote.deezer.DeezerService
+import com.mardous.booming.di.listenBrainzModule
 import com.mardous.booming.data.remote.github.GitHubService
 import com.mardous.booming.data.remote.jsonHttpClient
 import com.mardous.booming.data.remote.lastfm.LastFmService
@@ -365,4 +366,4 @@ private val viewModule = module {
     }
 }
 
-val appModules = listOf(networkModule, mainModule, roomModule, dataModule, viewModule)
+val appModules = listOf(networkModule, mainModule, roomModule, dataModule, viewModule, listenBrainzModule)

@@ -111,6 +111,7 @@ import kotlinx.coroutines.guava.future
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
+import com.mardous.booming.playback.listenbrainz.ListenBrainzScrobbleObserver
 import java.io.ByteArrayOutputStream
 import kotlin.random.Random
 
@@ -135,6 +136,7 @@ class PlaybackService :
     private val equalizerManager: EqualizerManager by inject()
     private val audioOutputObserver: AudioOutputObserver by inject()
     private val repository: Repository by inject()
+    private val listenBrainzObserver: ListenBrainzScrobbleObserver by inject()
 
     private val libraryProvider = LibraryProvider(repository)
     private val songPlayCountHelper = SongPlayCountHelper()
@@ -269,6 +271,7 @@ class PlaybackService :
         player.exoPlayer.shuffleOrder = ImprovedShuffleOrder(0, 0, Random.nextLong())
         player.setSequentialTimelineEnabled(sequentialTimeline)
         player.addListener(this)
+        player.addListener(listenBrainzObserver)  // ListenBrainz scrobbling observer
 
         mediaSession = with(MediaLibrarySession.Builder(this, player, this)) {
             setId(packageName)

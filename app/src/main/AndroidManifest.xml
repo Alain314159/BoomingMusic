@@ -99,6 +99,13 @@
             </intent-filter>
         </activity>
 
+        <!-- ListenBrainz Settings Activity -->
+        <activity
+            android:name=".ui.screen.settings.listenbrainz.ListenBrainzSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.BoomingMusic"
+            android:label="ListenBrainz" />
+
         <!-- In order not to break compatibility with icon-packs -->
         <activity-alias
             android:name=".activities.MainActivity"

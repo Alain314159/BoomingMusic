@@ -88,6 +88,9 @@ android {
         versionCode = 1210300
         versionName = currentVersion.name
         check(versionCode == currentVersionCode)
+        
+        // ListenBrainz NO requiere API Key - los usuarios usan su token personal
+        // Más información: https://listenbrainz.readthedocs.io/
     }
 
     flavorDimensions += "version"

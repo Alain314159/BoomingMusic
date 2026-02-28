@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <PreferenceCategory
+        android:title="General">
+        
+        <Preference
+            android:key="listenbrainz"
+            android:title="ListenBrainz"
+            android:summary="Track your listening history and get statistics"
+            android:icon="@drawable/ic_music_note_24dp">
+            <intent
+                android:targetPackage="com.mardous.booming"
+                android:targetClass="com.mardous.booming.ui.screen.settings.listenbrainz.ListenBrainzSettingsActivity" />
+        </Preference>
+        
+    </PreferenceCategory>
+    
+</PreferenceScreen>

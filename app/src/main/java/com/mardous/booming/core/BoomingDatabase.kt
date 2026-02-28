@@ -5,6 +5,10 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mardous.booming.data.local.room.*
+import com.mardous.booming.data.local.room.entity.ListenBrainzCredentialsEntity
+import com.mardous.booming.data.local.room.entity.ListenBrainzScrobbleQueueEntity
+import com.mardous.booming.data.local.room.dao.ListenBrainzCredentialsDao
+import com.mardous.booming.data.local.room.dao.ListenBrainzScrobbleQueueDao
 
 @Database(
     entities = [
@@ -16,9 +20,11 @@ import com.mardous.booming.data.local.room.*
         InclExclEntity::class,
         LyricsEntity::class,
         CanvasEntity::class,
-        ScannedMediaCache::class  // Nueva entidad para el scanner independiente
+        ScannedMediaCache::class,  // Nueva entidad para el scanner independiente (v5)
+        ListenBrainzCredentialsEntity::class,  // ListenBrainz credentials (v6)
+        ListenBrainzScrobbleQueueEntity::class // ListenBrainz scrobble queue (v6)
     ],
-    version = 5,  // Incrementado de 4 a 5
+    version = 6,  // Incrementado de 5 a 6 para ListenBrainz integration
     exportSchema = false
 )
 abstract class BoomingDatabase : RoomDatabase() {
@@ -29,7 +35,9 @@ abstract class BoomingDatabase : RoomDatabase() {
     abstract fun inclExclDao(): InclExclDao
     abstract fun lyricsDao(): LyricsDao
     abstract fun canvasDao(): CanvasDao
-    abstract fun scannedMediaCacheDao(): ScannedMediaCacheDao  // Nuevo DAO
+    abstract fun scannedMediaCacheDao(): ScannedMediaCacheDao
+    abstract fun listenBrainzCredentialsDao(): ListenBrainzCredentialsDao
+    abstract fun listenBrainzScrobbleQueueDao(): ListenBrainzScrobbleQueueDao
 
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -79,6 +87,42 @@ abstract class BoomingDatabase : RoomDatabase() {
                 db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_scanned_media_cache_filePath` ON `scanned_media_cache` (`file_path`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_scanned_media_cache_lastModified` ON `scanned_media_cache` (`last_modified`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_scanned_media_cache_isValid` ON `scanned_media_cache` (`is_valid`)")
+            }
+        }
+        
+        // Migración para ListenBrainz integration (versión 5 -> 6)
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // ListenBrainz credentials table
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `listenbrainz_credentials` (
+                        `id` INTEGER PRIMARY KEY NOT NULL DEFAULT 1,
+                        `userToken` TEXT NOT NULL,
+                        `username` TEXT,
+                        `lastSyncTimestamp` INTEGER
+                    )
+                """)
+                
+                // Scrobble queue table
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `listenbrainz_scrobble_queue` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `artistName` TEXT NOT NULL,
+                        `trackName` TEXT NOT NULL,
+                        `releaseName` TEXT,
+                        `listenedAt` INTEGER,
+                        `durationMs` INTEGER,
+                        `trackNumber` INTEGER,
+                        `mbidArtist` TEXT,
+                        `mbidRelease` TEXT,
+                        `mbidRecording` TEXT,
+                        `retryCount` INTEGER NOT NULL DEFAULT 0,
+                        `createdAt` INTEGER NOT NULL
+                    )
+                """)
+                
+                // Índice para scrobble queue
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_listenbrainz_scrobble_queue_createdAt` ON `listenbrainz_scrobble_queue` (`createdAt`)")
             }
         }
     }
