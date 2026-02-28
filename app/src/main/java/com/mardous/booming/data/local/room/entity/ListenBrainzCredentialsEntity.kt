@@ -31,8 +31,7 @@ data class ListenBrainzCredentialsEntity(
         fun fromDomain(credentials: com.mardous.booming.data.remote.listenbrainz.model.ListenBrainzCredentials): ListenBrainzCredentialsEntity {
             return ListenBrainzCredentialsEntity(
                 userToken = credentials.userToken,
-                username = credentials.username,
-                lastSyncTimestamp = credentials.lastSyncTimestamp
+                username = credentials.username
             )
         }
     }

@@ -3,12 +3,14 @@ package com.mardous.booming.data.remote.listenbrainz.service
 import android.content.Context
 import com.mardous.booming.data.local.room.dao.ListenBrainzCredentialsDao
 import com.mardous.booming.data.local.room.dao.ListenBrainzScrobbleQueueDao
+import com.mardous.booming.data.local.room.entity.ListenBrainzCredentialsEntity
 import com.mardous.booming.data.local.room.entity.ListenBrainzScrobbleQueueEntity
 import com.mardous.booming.data.remote.listenbrainz.api.ListenBrainzApi
 import com.mardous.booming.data.remote.listenbrainz.model.ListenBrainzCredentials
 import com.mardous.booming.data.remote.listenbrainz.model.ListenBrainzScrobble
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
