@@ -15,21 +15,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mardous.booming.data.remote.listenbrainz.service.AuthState
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Pantalla de configuración de ListenBrainz
  */
 @Composable
 fun ListenBrainzSettingsScreen(
-    viewModel: ListenBrainzSettingsViewModel = hiltViewModel(),
+    viewModel: ListenBrainzSettingsViewModel = koinViewModel(),
     onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    
+
     Scaffold(
         topBar = {
             TopAppBar(

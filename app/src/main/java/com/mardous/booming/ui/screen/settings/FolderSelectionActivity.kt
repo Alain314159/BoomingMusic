@@ -33,7 +33,6 @@ import com.mardous.booming.R
 import com.mardous.booming.data.scanner.FolderSelectionManager
 import com.mardous.booming.data.scanner.MediaScannerManager
 import com.mardous.booming.data.scanner.PermissionManager
-import com.mardous.booming.data.scanner.PermissionManager.StorageAccessLevel
 import com.mardous.booming.data.scanner.ScanFolder
 import com.mardous.booming.databinding.ActivityFolderSelectionBinding
 import com.mardous.booming.databinding.ItemFolderBinding

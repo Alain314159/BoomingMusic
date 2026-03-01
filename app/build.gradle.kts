@@ -207,6 +207,7 @@ dependencies {
     implementation(libs.bundles.navigation)
     implementation(libs.bundles.glance)
     implementation(libs.bundles.koin)
+    implementation(libs.koin.work)
     implementation(libs.bundles.coil)
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.markwon)
@@ -220,6 +221,7 @@ dependencies {
     implementation(libs.balloon)
     implementation(libs.compose.markdown)
     implementation(libs.aboutlibraries)
+    implementation(libs.androidx.browser)
 
     implementation(libs.fadingedgelayout)
     implementation(libs.advrecyclerview) {

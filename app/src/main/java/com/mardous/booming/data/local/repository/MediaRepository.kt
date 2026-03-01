@@ -19,6 +19,7 @@ package com.mardous.booming.data.local.repository
 
 import android.content.Context
 import android.util.Log
+import com.mardous.booming.data.local.room.ScannedMediaCache
 import com.mardous.booming.data.local.room.ScannedMediaCacheDao
 import com.mardous.booming.data.model.Song
 import com.mardous.booming.data.scanner.MediaScannerManager

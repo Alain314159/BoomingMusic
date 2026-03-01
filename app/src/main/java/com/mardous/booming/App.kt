@@ -47,6 +47,7 @@ import com.mardous.booming.util.EXPERIMENTAL_UPDATES
 import com.mardous.booming.util.Preferences.getDayNightMode
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
 
 fun appContext(): Context = App.instance.applicationContext
@@ -59,6 +60,7 @@ class App : Application(), SingletonImageLoader.Factory {
 
         startKoin {
             androidContext(this@App)
+            workManagerFactory()
             modules(appModules)
         }
 
