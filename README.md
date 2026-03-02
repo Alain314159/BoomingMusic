@@ -95,12 +95,28 @@
 
 ## 🧩 Roadmap
 
-- [ ] 📦 Independent library scanner (no MediaStore dependency)
-- [ ] 🎨 Multi-artist support (split & index properly)
-- [ ] 🎵 Improved genre handling
-- [ ] 🔁 Last.fm integration (import/export playback data)
-- [ ] 💿 Enhanced artist pages (separate albums and singles visually)
-- [ ] 🌐 Jellyfin & Navidrome integration
+Ver **[ROADMAP.md](ROADMAP.md)** para el plan completo y detallado.
+
+### ✅ Completado (v1.2.1)
+- [x] 📦 **Independent library scanner** - Scanner independiente sin MediaStore
+- [x] 🔄 **CI/CD Optimization** - GitHub Actions optimizados (3GB local, 4GB CI)
+- [x] 🏗️ **Single flavor build** - Simplificado a un solo build type
+- [x] 📊 **Enhanced database** - Room v5 con ScannedMediaCache
+- [x] 🎨 **Material You Design** - 7 temas de reproductor
+
+### ⏳ En Progreso (v1.3.0)
+- [ ] 🌐 **ListenBrainz Integration** - Scrobbling y sincronización (30% completado)
+
+### 🔜 Próximamente
+- [ ] 🎨 **Multi-artist support** - Múltiples artistas por canción
+- [ ] 🎵 **Improved genre handling** - Géneros con jerarquías
+- [ ] 💿 **Enhanced artist pages** - Álbumes y singles separados
+- [ ] 🌐 **Jellyfin & Navidrome** - Streaming desde servidores propios
+
+### 🎯 Prioridades 2026
+1. **ListenBrainz** - Finalizar integración (v1.3.0)
+2. **Multi-artist** - Resolver limitación actual (v1.4.0)
+3. **Jellyfin/Navidrome** - Streaming (v2.0.0)
 
 ## 🔗 Useful Links
 
