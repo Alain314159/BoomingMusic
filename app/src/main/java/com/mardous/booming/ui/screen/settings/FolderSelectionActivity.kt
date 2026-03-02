@@ -150,18 +150,18 @@ class FolderSelectionActivity : AbsThemeActivity() {
         val accessLevel = permissionManager.getAccessLevel()
 
         binding.permissionStatusText.text = when (accessLevel) {
-            PermissionManager.StorageAccessLevel.NONE ->
+            StorageAccessLevel.NONE ->
                 getString(R.string.permission_status_denied)
-            PermissionManager.StorageAccessLevel.LEGACY ->
+            StorageAccessLevel.LEGACY ->
                 getString(R.string.permission_status_granted) + " - " + getString(R.string.default_folders_only)
-            PermissionManager.StorageAccessLevel.SAF ->
+            StorageAccessLevel.SAF ->
                 getString(R.string.permission_status_granted)
-            PermissionManager.StorageAccessLevel.MANAGE_ALL ->
+            StorageAccessLevel.MANAGE_ALL ->
                 getString(R.string.permission_status_granted) + " - Full Access"
             else -> getString(R.string.permission_status_loading)
         }
 
-        binding.grantPermissionButton.visibility = if (accessLevel == PermissionManager.StorageAccessLevel.NONE) {
+        binding.grantPermissionButton.visibility = if (accessLevel == StorageAccessLevel.NONE) {
             View.VISIBLE
         } else {
             View.GONE

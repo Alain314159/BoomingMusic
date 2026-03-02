@@ -14,6 +14,13 @@ import androidx.compose.material.icons.filled.Login
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Cloud
+import androidx.compose.material.icons.outlined.Help
+import androidx.compose.material.icons.outlined.Key
+import androidx.compose.material.icons.outlined.Link
+import androidx.compose.material.icons.outlined.LinkOff
+import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -29,6 +36,7 @@ import org.koin.androidx.compose.koinViewModel
 /**
  * Pantalla de configuración de ListenBrainz
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListenBrainzSettingsScreen(
     viewModel: ListenBrainzSettingsViewModel = koinViewModel(),
@@ -118,7 +126,7 @@ fun ListenBrainzLoginCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                imageVector = Icons.Default.MusicNote,
+                imageVector = Icons.Outlined.MusicNote,
                 contentDescription = null,
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.primary
@@ -160,7 +168,7 @@ fun ListenBrainzLoginCard(
                     onDone = { onTokenSubmit(token.trim()) }
                 ),
                 leadingIcon = {
-                    Icon(Icons.Default.Key, contentDescription = null)
+                    Icon(Icons.Outlined.Key, contentDescription = null)
                 }
             )
             
@@ -172,7 +180,7 @@ fun ListenBrainzLoginCard(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = token.isNotBlank()
             ) {
-                Icon(Icons.Default.Link, contentDescription = null)
+                Icon(Icons.Outlined.Link, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Connect")
             }
@@ -181,7 +189,7 @@ fun ListenBrainzLoginCard(
             
             // Enlace de ayuda
             TextButton(onClick = onHelpClick) {
-                Icon(Icons.Default.Help, contentDescription = null)
+                Icon(Icons.Outlined.Help, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Get token from ListenBrainz")
             }
@@ -210,7 +218,7 @@ fun ListenBrainzStatusCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                imageVector = Icons.Default.CheckCircle,
+                imageVector = Icons.Outlined.CheckCircle,
                 contentDescription = null,
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.primary
@@ -240,13 +248,13 @@ fun ListenBrainzStatusCard(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 InfoItem(
-                    icon = Icons.Default.MusicNote,
+                    icon = Icons.Outlined.MusicNote,
                     label = "Scrobbling",
                     value = "Active"
                 )
                 
                 InfoItem(
-                    icon = Icons.Default.Cloud,
+                    icon = Icons.Outlined.Cloud,
                     label = "Sync",
                     value = "Auto"
                 )
@@ -262,7 +270,7 @@ fun ListenBrainzStatusCard(
                     contentColor = MaterialTheme.colorScheme.error
                 )
             ) {
-                Icon(Icons.Default.LinkOff, contentDescription = null)
+                Icon(Icons.Outlined.LinkOff, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Disconnect")
             }
