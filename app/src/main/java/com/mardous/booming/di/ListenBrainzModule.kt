@@ -37,7 +37,7 @@ val listenBrainzModule = module {
 
     // ViewModel
     viewModel {
-        ListenBrainzSettingsViewModel(scrobbleService = get())
+        ListenBrainzSettingsViewModel(scrobbleService = get(), context = androidContext())
     }
 
     // Note: ListenBrainzSyncWorker uses KoinComponent for DI,

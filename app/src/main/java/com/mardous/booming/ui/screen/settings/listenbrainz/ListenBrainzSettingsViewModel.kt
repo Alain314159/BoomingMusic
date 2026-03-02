@@ -1,9 +1,11 @@
 package com.mardous.booming.ui.screen.settings.listenbrainz
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mardous.booming.data.remote.listenbrainz.service.AuthState
 import com.mardous.booming.data.remote.listenbrainz.service.ListenBrainzScrobbleService
+import com.mardous.booming.work.ListenBrainzWorkManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +15,8 @@ import kotlinx.coroutines.launch
  * ViewModel para la pantalla de settings de ListenBrainz
  */
 class ListenBrainzSettingsViewModel(
-    private val scrobbleService: ListenBrainzScrobbleService
+    private val scrobbleService: ListenBrainzScrobbleService,
+    private val context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<AuthState>(AuthState.NotLoggedIn)
@@ -45,6 +48,8 @@ class ListenBrainzSettingsViewModel(
                 result.onSuccess { username ->
                     // Éxito, actualizar estado
                     _uiState.value = AuthState.LoggedIn(username, token)
+                    // Programar sync periódico
+                    ListenBrainzWorkManager.schedulePeriodicSync(context)
                 }.onFailure { error ->
                     // Error, mostrar mensaje
                     _uiState.value = AuthState.NotLoggedIn
@@ -64,6 +69,8 @@ class ListenBrainzSettingsViewModel(
         viewModelScope.launch {
             scrobbleService.logout()
             _uiState.value = AuthState.NotLoggedIn
+            // Cancelar sync periódico
+            ListenBrainzWorkManager.cancelPeriodicSync(context)
         }
     }
 }

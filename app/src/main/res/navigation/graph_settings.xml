@@ -37,26 +37,12 @@
             app:popExitAnim="@anim/booming_fragment_close_exit"
             app:destination="@+id/nav_playback_preferences"/>
         <action
-            android:id="@+id/action_to_metadataPreferences"
-            app:enterAnim="@anim/booming_fragment_open_enter"
-            app:exitAnim="@anim/booming_fragment_open_exit"
-            app:popEnterAnim="@anim/booming_fragment_close_enter"
-            app:popExitAnim="@anim/booming_fragment_close_exit"
-            app:destination="@+id/nav_metadata_preferences"/>
-        <action
             android:id="@+id/action_to_libraryPreferences"
             app:enterAnim="@anim/booming_fragment_open_enter"
             app:exitAnim="@anim/booming_fragment_open_exit"
             app:popEnterAnim="@anim/booming_fragment_close_enter"
             app:popExitAnim="@anim/booming_fragment_close_exit"
             app:destination="@+id/nav_library_preferences"/>
-        <action
-            android:id="@+id/action_to_updatePreferences"
-            app:enterAnim="@anim/booming_fragment_open_enter"
-            app:exitAnim="@anim/booming_fragment_open_exit"
-            app:popEnterAnim="@anim/booming_fragment_close_enter"
-            app:popExitAnim="@anim/booming_fragment_close_exit"
-            app:destination="@+id/nav_update_preferences"/>
         <action
             android:id="@+id/action_to_advancedPreferences"
             app:enterAnim="@anim/booming_fragment_open_enter"
