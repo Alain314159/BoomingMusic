@@ -172,12 +172,19 @@ class ListenBrainzScrobbleObserver(
      * Verifica si el track cumple los requisitos para scrobble
      */
     private fun shouldScrobble(mediaItem: MediaItem, playedDurationMs: Long): Boolean {
-        val trackDurationMs = mediaItem.mediaMetadata.extras?.getLong("duration") ?: 0L
+        // Try Media3 standard duration first, then fall back to metadata extras
+        val trackDurationMs = when {
+            mediaItem.mediaMetadata.durationMs != null && mediaItem.mediaMetadata.durationMs!! > 0 -> 
+                mediaItem.mediaMetadata.durationMs!!
+            mediaItem.mediaMetadata.extras?.containsKey("duration") == true ->
+                mediaItem.mediaMetadata.extras?.getLong("duration") ?: 0L
+            else -> 0L
+        }
         
         if (trackDurationMs <= 0) return false
         
         // Regla: 30 segundos o 50% del track (lo que sea menor)
-        val minDuration = minOf(30000, trackDurationMs / 2)
+        val minDuration = minOf(30000L, trackDurationMs / 2)
         
         return playedDurationMs >= minDuration
     }
@@ -189,7 +196,7 @@ class ListenBrainzScrobbleObserver(
         coroutineScope.launch {
             try {
                 val scrobble = mediaItem.toListenBrainzScrobble(
-                    listenedAt = playbackStartTimeMs / 1000 // Convertir a segundos
+                    listenedAt = System.currentTimeMillis() / 1000 // Use current time when scrobbled, not track start time
                 )
 
                 scrobbleService.submitScrobble(scrobble)

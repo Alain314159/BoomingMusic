@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
@@ -58,15 +59,11 @@ object ListenBrainzWorkManager {
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-        val workRequest = PeriodicWorkRequestBuilder<ListenBrainzSyncWorker>(
-            repeatInterval = 15,
-            repeatIntervalTimeUnit = TimeUnit.MINUTES
-        )
+        val workRequest = OneTimeWorkRequestBuilder<ListenBrainzSyncWorker>()
             .setConstraints(constraints)
             .addTag(TAG_SYNC)
             .build()
 
-        // Enqueue como one-time work
         WorkManager.getInstance(context).enqueue(workRequest)
     }
 }
