@@ -30,10 +30,14 @@ import android.provider.OpenableColumns
 import android.util.Log
 import androidx.media3.common.MediaItem
 import java.io.File
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
 import com.mardous.booming.core.sort.SongSortMode
 import com.mardous.booming.data.local.MediaQueryDispatcher
 import com.mardous.booming.data.local.room.InclExclDao
 import com.mardous.booming.data.local.room.InclExclEntity
+import com.mardous.booming.data.local.room.dao.SongArtistDao
+import com.mardous.booming.data.local.room.SongArtistEntity
 import com.mardous.booming.data.model.Album
 import com.mardous.booming.data.model.Song
 import com.mardous.booming.extensions.files.getCanonicalPathSafe
@@ -56,13 +60,25 @@ interface SongRepository {
     fun songByFilePath(filePath: String, ignoreBlacklist: Boolean = false): Song
     fun song(cursor: Cursor?): Song
     fun song(songId: Long): Song
+    
+    // Multi-artist support methods
+    suspend fun getArtistsForSong(songId: Long): List<String>
+    fun getArtistsForSongFlow(songId: Long): kotlinx.coroutines.flow.Flow<List<String>>
+    suspend fun addArtistToSong(songId: Long, artistName: String, order: Int = 0)
+    suspend fun removeArtistFromSong(songId: Long, artistName: String)
+    suspend fun updateSongArtists(songId: Long, artists: List<String>)
+    suspend fun getSongsByArtist(artistName: String): List<Song>
+    suspend fun getAllArtists(): List<String>
+    fun getAllArtistsFlow(): kotlinx.coroutines.flow.Flow<List<String>>
+    
     suspend fun initializeBlacklist()
 }
 
 @SuppressLint("InlinedApi")
 class RealSongRepository(
     private val context: Context,
-    private val inclExclDao: InclExclDao
+    private val inclExclDao: InclExclDao,
+    private val songArtistDao: SongArtistDao
 ) : SongRepository {
 
     override fun songs(): List<Song> {
@@ -194,6 +210,66 @@ class RealSongRepository(
         )
     }
 
+    // =========================================================================
+    // Multi-Artist Support Methods
+    // =========================================================================
+
+    override suspend fun getArtistsForSong(songId: Long): List<String> {
+        return songArtistDao.getArtistNamesForSong(songId)
+    }
+
+    override fun getArtistsForSongFlow(songId: Long): kotlinx.coroutines.flow.Flow<List<String>> {
+        return songArtistDao.getArtistsForSongFlow(songId)
+            .map { entities -> entities.map { it.artistName } }
+    }
+
+    override suspend fun addArtistToSong(songId: Long, artistName: String, order: Int) {
+        songArtistDao.insert(SongArtistEntity.create(songId, artistName, order))
+    }
+
+    override suspend fun removeArtistFromSong(songId: Long, artistName: String) {
+        val entity = songArtistDao.getArtistsForSong(songId)
+            .find { it.artistName == artistName }
+        if (entity != null) {
+            songArtistDao.delete(entity)
+        }
+    }
+
+    override suspend fun updateSongArtists(songId: Long, artists: List<String>) {
+        // Delete existing artists
+        songArtistDao.deleteAllForSong(songId)
+        // Insert new artists with order
+        val entities = artists.mapIndexed { index, artistName ->
+            SongArtistEntity.create(songId, artistName, index)
+        }
+        songArtistDao.insertAll(entities)
+    }
+
+    override suspend fun getSongsByArtist(artistName: String): List<Song> {
+        // Get all song_ids for this artist
+        val songArtistEntities = songArtistDao.getSongsForArtist(artistName)
+        val songIds = songArtistEntities.map { it.songId }
+
+        if (songIds.isEmpty()) return emptyList()
+
+        // Build query for songs
+        val selection = songIds.joinToString(",") { "?" }
+        return songs(
+            makeSongCursor(
+                selection = "${AudioColumns._ID} IN ($selection)",
+                selectionValues = songIds.map { it.toString() }.toTypedArray()
+            )
+        )
+    }
+
+    override suspend fun getAllArtists(): List<String> {
+        return songArtistDao.getAllArtistsFlow().first()
+    }
+
+    override fun getAllArtistsFlow(): kotlinx.coroutines.flow.Flow<List<String>> {
+        return songArtistDao.getAllArtistsFlow()
+    }
+
     override suspend fun initializeBlacklist() {
         val excludedPaths = listOf(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS),
@@ -307,7 +383,7 @@ class RealSongRepository(
         val year = cursor.getInt(cursor.getColumnIndexOrThrow(AudioColumns.YEAR))
         val size = cursor.getLong(cursor.getColumnIndexOrThrow(AudioColumns.SIZE))
         var duration = cursor.getLong(cursor.getColumnIndexOrThrow(AudioColumns.DURATION))
-        
+
         // Fix for Issue #290: M4A files reporting 0 duration
         // Use TagLib as fallback when MediaStore returns 0 duration
         if (duration <= 0) {
@@ -323,7 +399,7 @@ class RealSongRepository(
                 duration = 1000 // 1 second minimum to prevent filtering
             }
         }
-        
+
         val dateAdded = cursor.getLong(cursor.getColumnIndexOrThrow(AudioColumns.DATE_ADDED))
         val dateModified = cursor.getLong(cursor.getColumnIndexOrThrow(AudioColumns.DATE_MODIFIED))
         val albumId = cursor.getLong(cursor.getColumnIndexOrThrow(AudioColumns.ALBUM_ID))
@@ -332,22 +408,37 @@ class RealSongRepository(
         val artistName = cursor.getStringSafe(AudioColumns.ARTIST) ?: ""
         val albumArtistName = cursor.getStringSafe(AudioColumns.ALBUM_ARTIST)
         val genreName = cursor.getStringSafe(AudioColumns.GENRE)
+
+        // CRITICAL: Get multiple artists from song_artist table
+        // Use runBlocking because we're in a suspend context
+        val artists = kotlinx.coroutines.runBlocking {
+            try {
+                getArtistsForSong(id).takeIf { it.isNotEmpty() }
+                    ?: listOfNotNull(artistName.takeUnless { it.isBlank() })
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to get artists for song $id", e)
+                // Fallback to MediaStore artistName
+                listOfNotNull(artistName.takeUnless { it.isBlank() })
+            }
+        }
+
         return Song(
-            id,
-            data,
-            title,
-            trackNumber,
-            year,
-            size,
-            duration,
-            dateAdded,
-            dateModified,
-            albumId,
-            albumName,
-            artistId,
-            artistName,
-            albumArtistName,
-            genreName
+            id = id,
+            data = data,
+            title = title,
+            trackNumber = trackNumber,
+            year = year,
+            size = size,
+            duration = duration,
+            dateAdded = dateAdded,
+            rawDateModified = dateModified,
+            albumId = albumId,
+            albumName = albumName,
+            artistId = artistId,
+            artistName = artistName,
+            albumArtistName = albumArtistName,
+            genreName = genreName,
+            artists = artists  // NEW: List of artists (must be last)
         )
     }
 

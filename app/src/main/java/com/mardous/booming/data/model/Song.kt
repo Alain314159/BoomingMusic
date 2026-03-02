@@ -46,8 +46,22 @@ open class Song(
     open val artistId: Long,
     open val artistName: String,
     open val albumArtistName: String?,
-    open val genreName: String?
+    open val genreName: String?,
+    // NEW: Multi-artist support (v1.4.0) - defaults to single artist from artistName
+    val artists: List<String> = listOfNotNull(artistName.takeUnless { it.isBlank() })
 ) : Parcelable, FileSystemItem {
+
+    // Computed property for primary artist (first in list)
+    val primaryArtist: String
+        get() = artists.firstOrNull() ?: artistName
+
+    // All artists as comma-separated string
+    val artistNames: String
+        get() = artists.joinToString(", ")
+
+    // For display - uses all artists
+    val displayArtistName: String
+        get() = artistNames
 
     val uri: Uri
         get() = ContentUris.withAppendedId(getAudioContentUri(), id)
@@ -85,7 +99,8 @@ open class Song(
         song.artistId,
         song.artistName,
         song.albumArtistName,
-        song.genreName
+        song.genreName,
+        song.artists
     )
 
     fun toMediaItem(itemId: String = id.toString()) = if (this == emptySong) {
@@ -100,7 +115,8 @@ open class Song(
                     .setArtworkUri(uri) // IMPORTANT must use Song's uri
                     .setTitle(title)
                     .setAlbumTitle(albumName)
-                    .setArtist(artistName)
+                    // Use all artists for MediaMetadata
+                    .setArtist(displayArtistName)
                     .setAlbumArtist(albumArtistName)
                     .setGenre(genreName)
                     .setTrackNumber(trackNumber)
@@ -128,6 +144,8 @@ open class Song(
         if (albumName != song.albumName) return false
         if (artistId != song.artistId) return false
         if (artistName != song.artistName) return false
+        // Compare artists list
+        if (artists != song.artists) return false
         if (data != song.data) return false
         if (title != song.title) return false
         if (albumArtistName != song.albumArtistName) return false
@@ -149,6 +167,7 @@ open class Song(
             albumName,
             artistId,
             artistName,
+            artists,
             albumArtistName,
             genreName
         )
@@ -169,12 +188,15 @@ open class Song(
                 ", albumName='" + albumName + '\'' +
                 ", artistId=" + artistId +
                 ", artistName='" + artistName + '\'' +
+                ", artists=" + artists +  // Show artists list
                 ", albumArtistName='" + albumArtistName + '\'' +
                 ", genreName='" + genreName + '\'' +
                 '}'
     }
 
     companion object {
-        val emptySong = Song(-1, "", "", -1, -1, -1, -1, -1, -1, -1, "", -1, "", "", "")
+        val emptySong = Song(
+            -1, "", "", -1, -1, -1, -1, -1, -1, -1, "", -1, "", "", "", emptyList()
+        )
     }
 }

@@ -38,7 +38,8 @@ class ExpandedSong(
     artistId,
     artistName,
     albumArtistName,
-    genreName
+    genreName,
+    artists = listOfNotNull(artistName.takeUnless { it.isBlank() })  // Default to single artist
 ) {
 
     constructor(
