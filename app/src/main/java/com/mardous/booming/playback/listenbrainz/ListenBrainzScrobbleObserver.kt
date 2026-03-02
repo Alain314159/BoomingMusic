@@ -10,23 +10,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Observer que monitorea la reproducción y envía scrobbles a ListenBrainz
- * 
+ *
  * Se registra como listener del player y detecta:
  * - Inicio de reproducción
  * - Fin de reproducción
  * - Duración escuchada
- * 
+ *
  * Reglas de scrobbling:
  * - Track > 30 segundos escuchados
  * - O 50% del track si es menor a 30 segundos
  */
-@Singleton
-class ListenBrainzScrobbleObserver @Inject constructor(
+class ListenBrainzScrobbleObserver(
     private val scrobbleService: ListenBrainzScrobbleService
 ) : Player.Listener {
     

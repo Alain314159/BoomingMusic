@@ -1,6 +1,7 @@
 package com.mardous.booming.data.remote.listenbrainz.service
 
 import android.content.Context
+import android.util.Log
 import com.mardous.booming.data.local.room.dao.ListenBrainzCredentialsDao
 import com.mardous.booming.data.local.room.dao.ListenBrainzScrobbleQueueDao
 import com.mardous.booming.data.local.room.entity.ListenBrainzCredentialsEntity
@@ -11,20 +12,17 @@ import com.mardous.booming.data.remote.listenbrainz.model.ListenBrainzScrobble
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Servicio para gestionar scrobbles a ListenBrainz
- * 
+ *
  * Maneja:
  * - Envío de scrobbles individuales
  * - Cola de scrobbles pendientes (offline)
  * - Now Playing updates
  * - Reintentos automáticos
  */
-@Singleton
-class ListenBrainzScrobbleService @Inject constructor(
+class ListenBrainzScrobbleService(
     private val api: ListenBrainzApi,
     private val credentialsDao: ListenBrainzCredentialsDao,
     private val queueDao: ListenBrainzScrobbleQueueDao,

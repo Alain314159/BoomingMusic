@@ -40,8 +40,6 @@ val listenBrainzModule = module {
         ListenBrainzSettingsViewModel(scrobbleService = get())
     }
 
-    // Worker factory
-    factory { (context: Context) ->
-        ListenBrainzSyncWorker(context, get())
-    }
+    // Note: ListenBrainzSyncWorker uses KoinComponent for DI,
+    // no need to inject dependencies here
 }

@@ -13,18 +13,15 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * API Client para ListenBrainz
- * 
+ *
  * Documentación: https://listenbrainz.readthedocs.io/
- * 
+ *
  * NO requiere API Key - los usuarios usan su token personal
  */
-@Singleton
-class ListenBrainzApi @Inject constructor(
+class ListenBrainzApi(
     private val httpClient: HttpClient
 ) {
     

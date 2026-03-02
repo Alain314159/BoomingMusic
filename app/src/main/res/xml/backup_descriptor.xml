@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content xmlns:tools="http://schemas.android.com/tools">
+    <!-- Include non-sensitive databases -->
     <include domain="database" path="song_play_count.db"/>
     <include domain="database" path="history.db"/>
+    
+    <!-- Exclude sensitive databases -->
     <exclude domain="database" path="music_playback_state.db" tools:ignore="FullBackupContent"/>
-
+    <exclude domain="database" path="booming.db"/>
+    <exclude domain="database" path="booming-encrypted.db"/>
+    
+    <!-- Include audio preferences -->
     <include domain="sharedpref" path="BoomingAudioFX.xml"/>
-
-    <!-- Exclude the shared preferences file that contains the GCM registrationId -->
+    
+    <!-- Exclude sensitive preferences -->
     <exclude domain="sharedpref" path="artist_signatures.xml" tools:ignore="FullBackupContent"/>
+    <exclude domain="sharedpref" path="listenbrainz_prefs.xml"/>
 </full-backup-content>

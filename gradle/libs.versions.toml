@@ -98,6 +98,7 @@ navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", version.ref 
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose" }
 compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "composeM3" }
+compose-material-icons = { module = "androidx.compose.material:material-icons-extended" }
 compose-ui = { module = "androidx.compose.ui:ui" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }

@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <external-path
-        name="external"
-        path="." />
-
+    <!-- Only expose specific directories needed for file sharing -->
+    <cache-path
+        name="cache"
+        path="covers/" />
+    
     <files-path
         name="files"
         path="." />
-
+    
     <external-files-path
         name="external_files"
-        path="."/>
-
-    <root-path
-        name="root"
-        path="/storage/"/>
+        path="exports/" />
+    
+    <!-- Note: Removed broad external-path and root-path for security -->
 </paths>

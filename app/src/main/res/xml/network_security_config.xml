@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Default configuration: block cleartext traffic -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" overridePins="false" />
+        </trust-anchors>
+    </base-config>
+    
+    <!-- ListenBrainz API domain -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">api.listenbrainz.org</domain>
+        <domain includeSubdomains="true">listenbrainz.org</domain>
+    </domain-config>
+    
+    <!-- GitHub API for updates -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">api.github.com</domain>
+        <domain includeSubdomains="true">github.com</domain>
+    </domain-config>
+    
+    <!-- Deezer API -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">api.deezer.com</domain>
+        <domain includeSubdomains="true">deezer.com</domain>
+    </domain-config>
+    
+    <!-- Last.fm API -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">ws.audioscrobbler.com</domain>
+        <domain includeSubdomains="true">last.fm</domain>
+    </domain-config>
+    
+    <!-- LRCLIB API for lyrics -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">lrclib.net</domain>
+    </domain-config>
+    
+    <!-- Better Lyrics API -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">lonami.dev</domain>
+    </domain-config>
+    
+    <!-- Debug configuration (only for debug builds) -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>
