@@ -144,7 +144,8 @@ private val roomModule = module {
                 BoomingDatabase.MIGRATION_1_2,
                 BoomingDatabase.MIGRATION_2_3,
                 BoomingDatabase.MIGRATION_3_4,
-                BoomingDatabase.MIGRATION_4_5  // Nueva migración para ScannedMediaCache
+                BoomingDatabase.MIGRATION_4_5,
+                BoomingDatabase.MIGRATION_5_6
             )
             .build()
     }

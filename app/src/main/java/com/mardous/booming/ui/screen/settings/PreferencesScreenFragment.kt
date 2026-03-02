@@ -99,9 +99,7 @@ import com.mardous.booming.util.TRASH_MUSIC_FILES
 import com.mardous.booming.util.USE_CUSTOM_FONT
 import com.mardous.booming.util.USE_FOLDER_ART
 import com.mardous.booming.util.WHITELIST_ENABLED
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -163,17 +161,15 @@ open class PreferenceScreenFragment : PreferenceFragmentCompat(),
             }
         }
 
-    @OptIn(DelicateCoroutinesApi::class)
     private val createBackupLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.CreateDocument("application/*")) { uri ->
             if (uri != null) {
-                GlobalScope.launch {
+                viewLifecycleOwner.lifecycleScope.launch {
                     BackupHelper.createBackup(requireContext(), uri)
                 }
             }
         }
 
-    @OptIn(DelicateCoroutinesApi::class)
     private val selectBackupLauncher: ActivityResultLauncher<Array<String>> =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { selection ->
             if (selection != null) {
@@ -187,7 +183,7 @@ open class PreferenceScreenFragment : PreferenceFragmentCompat(),
                         val content = BackupContent.entries.filterIndexed { i, _ ->
                             whichPos.contains(i)
                         }
-                        GlobalScope.launch {
+                        viewLifecycleOwner.lifecycleScope.launch {
                             BackupHelper.restoreBackup(requireContext(), selection, content)
                         }
                         true

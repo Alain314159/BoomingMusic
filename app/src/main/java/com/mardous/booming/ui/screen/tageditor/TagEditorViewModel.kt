@@ -113,7 +113,7 @@ class TagEditorViewModel(
 
     fun setArtistImage(uri: Uri) = liveData(Dispatchers.IO) {
         val artist = fetchArtist()
-        if (artist != Artist.empty) {
+        if (artist != null && artist != Artist.empty) {
             emit(customArtistImageManager.setCustomImage(artist, uri))
         } else {
             emit(false)
@@ -122,7 +122,7 @@ class TagEditorViewModel(
 
     fun resetArtistImage() = liveData(Dispatchers.IO) {
         val artist = fetchArtist()
-        if (artist != Artist.empty) {
+        if (artist != null && artist != Artist.empty) {
             emit(customArtistImageManager.removeCustomImage(artist))
         } else {
             emit(false)
@@ -139,14 +139,14 @@ class TagEditorViewModel(
             emit(repository.deezerTrack(artistName, title))
         }
 
-    fun requestArtist(): LiveData<Artist> = liveData(Dispatchers.IO) {
+    fun requestArtist(): LiveData<Artist?> = liveData(Dispatchers.IO) {
         val artist = fetchArtist()
-        if (artist != Artist.empty) {
+        if (artist != null && artist != Artist.empty) {
             emit(artist)
         }
     }
 
-    private fun fetchArtist(): Artist {
+    private fun fetchArtist(): Artist? {
         if (artist == null) {
             artist = if (target.type == EditTarget.Type.AlbumArtist) {
                 repository.albumArtistByName(target.name)
@@ -154,7 +154,7 @@ class TagEditorViewModel(
                 repository.artistById(target.id)
             }
         }
-        return artist!!
+        return artist
     }
 
     companion object {

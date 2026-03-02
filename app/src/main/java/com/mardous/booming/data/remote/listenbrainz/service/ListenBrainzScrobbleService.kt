@@ -111,17 +111,22 @@ class ListenBrainzScrobbleService @Inject constructor(
     
     /**
      * Envía un scrobble a ListenBrainz
-     * 
+     *
      * Si hay conexión → envía inmediatamente
      * Si NO hay conexión → guarda en cola
      */
     suspend fun submitScrobble(scrobble: ListenBrainzScrobble) {
-        val token = getUserToken() ?: return
-        
+        val token = getUserToken()
+        if (token == null) {
+            // User not logged in, queue for later (user might log in later)
+            queueScrobble(scrobble)
+            return
+        }
+
         try {
             // Intentar enviar inmediatamente
             val response = api.scrobble(token, scrobble)
-            
+
             response.onFailure { error ->
                 // Error de red u otro, guardar en cola
                 queueScrobble(scrobble)

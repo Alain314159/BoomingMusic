@@ -1,5 +1,6 @@
 package com.mardous.booming.playback.listenbrainz
 
+import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import com.mardous.booming.data.remote.listenbrainz.model.ListenBrainzScrobble
@@ -193,13 +194,16 @@ class ListenBrainzScrobbleObserver @Inject constructor(
                 val scrobble = mediaItem.toListenBrainzScrobble(
                     listenedAt = playbackStartTimeMs / 1000 // Convertir a segundos
                 )
-                
+
                 scrobbleService.submitScrobble(scrobble)
             } catch (e: Exception) {
-                // Error al scrobblear, se reintentará luego
-                e.printStackTrace()
+                Log.e(TAG, "Error submitting scrobble", e)
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "ListenBrainzObserver"
     }
 }
 

@@ -492,7 +492,10 @@ class PlayerViewModel(
         behavior: SongClickBehavior
     ) = viewModelScope.launch {
         when (behavior) {
-            SongClickBehavior.PlayWholeList -> openQueue(songs, position)
+            SongClickBehavior.PlayWholeList -> {
+                val safePosition = position.coerceIn(0, (songs.size - 1).coerceAtLeast(0))
+                openQueue(songs, safePosition)
+            }
 
             SongClickBehavior.PlayOnlyThisSong -> {
                 val selectedSong = songs.getOrNull(position)
