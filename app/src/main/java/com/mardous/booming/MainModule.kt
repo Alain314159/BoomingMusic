@@ -183,6 +183,10 @@ private val roomModule = module {
         get<BoomingDatabase>().scannedMediaCacheDao()
     }
 
+    single {
+        get<BoomingDatabase>().songArtistDao()
+    }
+
     // ListenBrainz DAOs (added in v6)
     single {
         get<BoomingDatabase>().listenBrainzCredentialsDao()
