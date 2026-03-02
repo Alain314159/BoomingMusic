@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * Manages Cast functionality and CastPlayer lifecycle.
  * Handles switching between local (ExoPlayer) and remote (CastPlayer) playback.
  */
-@OptIn(markerClasses = [UnstableApi::class])
+@OptIn(UnstableApi::class)
 class CastManager private constructor(
     private val context: Context
 ) : CastStateListener {
