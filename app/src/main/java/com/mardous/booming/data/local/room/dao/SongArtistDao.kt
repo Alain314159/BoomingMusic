@@ -22,7 +22,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.mardous.booming.data.local.room.entity.SongArtistEntity
+import com.mardous.booming.data.local.room.SongArtistEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

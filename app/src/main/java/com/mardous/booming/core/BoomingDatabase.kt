@@ -7,7 +7,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mardous.booming.data.local.room.*
 import com.mardous.booming.data.local.room.entity.ListenBrainzCredentialsEntity
 import com.mardous.booming.data.local.room.entity.ListenBrainzScrobbleQueueEntity
-import com.mardous.booming.data.local.room.entity.SongArtistEntity
 import com.mardous.booming.data.local.room.dao.ListenBrainzCredentialsDao
 import com.mardous.booming.data.local.room.dao.ListenBrainzScrobbleQueueDao
 import com.mardous.booming.data.local.room.dao.SongArtistDao

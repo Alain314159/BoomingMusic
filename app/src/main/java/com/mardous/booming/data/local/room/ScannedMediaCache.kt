@@ -31,9 +31,20 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "scanned_media_cache",
     indices = [
+        // Índices existentes
         Index(value = ["file_path"], unique = true),
         Index(value = ["last_modified"]),
-        Index(value = ["is_valid"])
+        Index(value = ["is_valid"]),
+        // Nuevos índices de búsqueda para optimización (Q2 2026)
+        Index(value = ["artist"]),
+        Index(value = ["album"]),
+        Index(value = ["genre"]),
+        Index(value = ["title"]),
+        Index(value = ["year"]),
+        // Índices compuestos para búsquedas avanzadas
+        Index(value = ["artist", "album"]),
+        Index(value = ["genre", "artist"]),
+        Index(value = ["year", "artist"])
     ]
 )
 data class ScannedMediaCache(

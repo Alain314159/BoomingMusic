@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.mardous.booming.data.local.room.entity
+package com.mardous.booming.data.local.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -31,6 +31,7 @@ import androidx.room.PrimaryKey
  */
 @Entity(
     tableName = "song_artist",
+    primaryKeys = ["song_id", "artist_name"],
     foreignKeys = [
         ForeignKey(
             entity = SongEntity::class,
@@ -40,9 +41,7 @@ import androidx.room.PrimaryKey
         )
     ],
     indices = [
-        Index(value = ["song_id"]),
-        Index(value = ["artist_name"]),
-        Index(value = ["song_id", "artist_name"], unique = true)
+        Index(value = ["artist_name"])
     ]
 )
 data class SongArtistEntity(
