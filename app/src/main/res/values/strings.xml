@@ -579,6 +579,7 @@
     <string name="sleep_timer_15_mins">15 mins</string>
     <string name="sleep_timer_45_mins">45 mins</string>
     <string name="sleep_timer_1_hour">1 hour</string>
+    <string name="sleep_timer_2_hour">2 hour</string>
     <string name="sleep_timer_finish_current_music">Finish last song</string>
     <string name="sleep_timer_stop_after_this_track">Stop after this track</string>
     <string name="sleep_timer_stop_after_x">Stop after %s</string>
@@ -699,6 +700,7 @@
     <string name="lyrics_effects_note">Advanced effects enhance the visual experience but may require more system resources and battery.</string>
     <string name="lyrics_background_effect_title">Background effect</string>
     <string name="lyrics_background_gradient">Gradient</string>
+    <string name="lyrics_background_blur">Blur</string>
     <string name="lyrics_blur_effect_title">Blur effect</string>
     <string name="lyrics_blur_effect_summary">Blur the lyrics lines adjacent to the current one.</string>
     <string name="lyrics_shadow_effect_title">Shadow effect</string>
@@ -774,6 +776,8 @@
     <string name="prefer_remaining_time_summary">Display remaining time instead of the song\'s duration.</string>
     <string name="prefer_album_artist_name_title">"Prefer Album-artist's name"</string>
     <string name="prefer_album_artist_name_summary">Shows the Album-artist\'s name instead of Song-artist\'s name (if available).</string>
+    <string name="player_blur_intensity_title">Blur intensity</string>
+    <string name="player_blur_intensity_summary">Adjust how strong the background blur appears in the Blur theme. Lower values may improve performance.</string>
 
     <!-- Playback preferences -->
     <string name="play_on_startup_title">Play on startup</string>
