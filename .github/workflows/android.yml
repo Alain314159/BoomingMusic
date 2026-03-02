@@ -36,8 +36,8 @@ jobs:
       - name: Run Lint
         run: ./gradlew lintDebug --no-daemon
         env:
-          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=512m"
-          _JAVA_OPTIONS: "-Xmx3g"
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m"
+          _JAVA_OPTIONS: "-Xmx4g"
 
       - name: Upload lint report
         if: always()
@@ -72,8 +72,8 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew assembleDebug --no-daemon
       env:
-        GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=512m"
-        _JAVA_OPTIONS: "-Xmx3g"
+        GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m"
+        _JAVA_OPTIONS: "-Xmx4g"
 
     - name: Verify APK exists
       run: |

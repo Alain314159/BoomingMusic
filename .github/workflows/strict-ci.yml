@@ -45,9 +45,9 @@ jobs:
       - name: Compile Kotlin (strict mode)
         run: ./gradlew compileDebugKotlin --no-daemon
         env:
-          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=512m"
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m"
           ORG_GRADLE_PROJECT_kotlin.caching.enabled: false
-          _JAVA_OPTIONS: "-Xmx3g"
+          _JAVA_OPTIONS: "-Xmx4g"
 
       - name: Upload compilation report
         if: failure()
@@ -87,8 +87,8 @@ jobs:
       - name: Run Lint (fail on any warning)
         run: ./gradlew lintDebug --no-daemon
         env:
-          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=512m"
-          _JAVA_OPTIONS: "-Xmx3g"
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m"
+          _JAVA_OPTIONS: "-Xmx4g"
 
       - name: Upload lint report
         if: always()
@@ -138,8 +138,8 @@ jobs:
       - name: Build Debug APK
         run: ./gradlew assembleDebug --no-daemon
         env:
-          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=512m"
-          _JAVA_OPTIONS: "-Xmx3g"
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m"
+          _JAVA_OPTIONS: "-Xmx4g"
 
       - name: Verify APK exists
         run: |
@@ -224,8 +224,8 @@ jobs:
       - name: Build Release APK
         run: ./gradlew assembleRelease --no-daemon
         env:
-          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=512m"
-          _JAVA_OPTIONS: "-Xmx3g"
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m"
+          _JAVA_OPTIONS: "-Xmx4g"
 
       - name: Verify APK exists
         run: |
