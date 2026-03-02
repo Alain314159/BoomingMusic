@@ -126,7 +126,7 @@ class GitHubRelease(
     ) : Parcelable {
 
         val isApk: Boolean
-            get() = contentType == APK_MIME_TYPE && name.contains(BuildConfig.FLAVOR)
+            get() = contentType == APK_MIME_TYPE
 
         companion object {
             const val APK_MIME_TYPE = "application/vnd.android.package-archive"
