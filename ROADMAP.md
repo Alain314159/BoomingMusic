@@ -6,6 +6,40 @@
 
 ---
 
+## 📋 Plan de Acción 2026 - Resumen Ejecutivo
+
+**Documento Completo:** Ver [`docs/ACTION_PLAN_2026.md`](docs/ACTION_PLAN_2026.md)
+
+### 🎯 Objetivos Estratégicos por Quarter
+
+| Quarter | Enfoque | Features Principales | Estado |
+|---------|---------|---------------------|--------|
+| **Q1** (Ene-Mar) | **Cimentación** | ListenBrainz ✅, Multi-Artist 🚧 | 80% completo |
+| **Q2** (Abr-Jun) | **Optimización** | Géneros, Build Times, Tests 80%+ | ⏳ Planificado |
+| **Q3** (Jul-Sep) | **Innovación** | Jellyfin, Navidrome, Voice Search | ⏳ Planificado |
+| **Q4** (Oct-Dic) | **Pulido** | KDoc, Performance, v2.0.0 Stable | ⏳ Planificado |
+
+### 📊 Métricas de Éxito 2026
+
+| Métrica | Actual | Objetivo Q4 | Progreso |
+|---------|--------|-------------|----------|
+| **ListenBrainz** | 100% | 100% | ✅ COMPLETADO |
+| **Multi-Artist** | 25% | 100% | 🚧 En progreso |
+| **Build Time (CI)** | 30 min | 15 min | ⏳ Q2 |
+| **Test Coverage** | <50% | 80%+ | ⏳ Q2 |
+| **Streaming** | 0% | 100% | ⏳ Q3 |
+| **KDoc Coverage** | <20% | 100% | ⏳ Q4 |
+
+### 🔧 Mejoras Técnicas Prioritarias
+
+1. **Arquitectura:** Modularizar Koin modules (368 líneas → módulos cohesivos)
+2. **Database:** Índices optimizados, migraciones con tests, Paging 3
+3. **Performance:** Build times -50%, memory management optimizado
+4. **Testing:** 80%+ coverage en capas críticas
+5. **Qwen Code:** Subagentes personalizados (android-expert, room-expert, performance-optimizer)
+
+---
+
 ## 📊 Resumen del Estado
 
 | Categoría | Progreso | Estado |
