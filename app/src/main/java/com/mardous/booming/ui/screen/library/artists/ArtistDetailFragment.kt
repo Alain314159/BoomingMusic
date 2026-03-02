@@ -235,9 +235,7 @@ class ArtistDetailFragment : AbsMainActivityFragment(R.layout.fragment_artist_de
         }
 
         loadImage(artist)
-        if (requireContext().isAllowedToDownloadMetadata()) {
-            loadBiography(artist.name)
-        }
+        // loadBiography call removed - method not implemented
         binding.artistTitle.text = artist.displayName()
         binding.artistText.text = artist.artistInfo(requireContext())
 

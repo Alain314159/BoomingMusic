@@ -30,23 +30,6 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Nivel de acceso a almacenamiento disponible.
- */
-enum class StorageAccessLevel {
-    /** Sin permisos */
-    NONE,
-
-    /** READ_EXTERNAL_STORAGE o READ_MEDIA_AUDIO (Android 9-) */
-    LEGACY,
-
-    /** Storage Access Framework (carpetas seleccionadas por usuario, Android 10+) */
-    SAF,
-
-    /** Acceso completo (Android 11+, NO RECOMENDADO para music players) */
-    MANAGE_ALL
-}
-
-/**
  * Gestiona permisos de almacenamiento para el scanner.
  * 
  * ESTRATEGIA RECOMENDADA:

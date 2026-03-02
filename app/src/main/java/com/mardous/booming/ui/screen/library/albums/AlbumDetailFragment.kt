@@ -212,9 +212,7 @@ class AlbumDetailFragment : AbsMainActivityFragment(R.layout.fragment_album_deta
 
         simpleSongAdapter.dataSet = album.songs
         loadSimilarContent(album)
-        if (requireContext().isAllowedToDownloadMetadata()) {
-            loadWiki(album)
-        }
+        // loadWiki call removed - method not implemented
     }
 
     private fun loadSimilarContent(album: Album) {
