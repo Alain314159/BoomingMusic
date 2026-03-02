@@ -93,15 +93,8 @@ android {
         // Más información: https://listenbrainz.readthedocs.io/
     }
 
-    flavorDimensions += "version"
-    productFlavors {
-        create("normal") {
-            dimension = "version"
-        }
-        create("fdroid") {
-            dimension = "version"
-        }
-    }
+    // Single flavor - no product flavors needed
+    // Removed fdroid flavor (was used for F-Droid distribution with restricted features)
 
     val signingProperties = getProperties("keystore.properties")
     val releaseSigning = if (signingProperties != null) {

@@ -48,11 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: check
-    
-    strategy:
-      matrix:
-        variant: [normal, fdroid]
-    
+
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-java@v4
@@ -67,21 +63,21 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build with Gradle (${{ matrix.variant }})
-      run: ./gradlew assemble${{ matrix.variant == 'normal' && 'Normal' || 'Fdroid' }}Debug --no-daemon --stacktrace
+    - name: Build with Gradle
+      run: ./gradlew assembleNormalDebug --no-daemon --stacktrace
       env:
         _JAVA_OPTIONS: "-Xmx4g"
 
     - name: Verify APK exists
       run: |
         find app/build/outputs/apk -name "*.apk" -type f
-        test -f app/build/outputs/apk/${{ matrix.variant }}/debug/app-${{ matrix.variant }}-debug.apk || \
-        test -f app/build/outputs/apk/${{ matrix.variant }}/debug/BoomingMusic-${{ matrix.variant }}-debug.apk
+        test -f app/build/outputs/apk/normal/debug/app-normal-debug.apk || \
+        test -f app/build/outputs/apk/normal/debug/BoomingMusic-normal-debug.apk
 
     - name: Upload APK artifacts
       if: github.event_name == 'pull_request'
       uses: actions/upload-artifact@v4
       with:
-        name: release-apk-${{ matrix.variant }}
-        path: app/build/outputs/apk/${{ matrix.variant }}/debug/*.apk
+        name: release-apk-normal
+        path: app/build/outputs/apk/normal/debug/*.apk
         retention-days: 14

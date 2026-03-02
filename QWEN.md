@@ -92,18 +92,15 @@ system_prompt: |
 ```bash
 # Build debug
 ./gradlew assembleNormalDebug
-./gradlew assembleFdroidDebug
 
 # Lint (crítico - warnings = error)
 ./gradlew lintNormalDebug
-./gradlew lintFdroidDebug
 
 # Tests
 ./gradlew testNormalDebugUnitTest
-./gradlew testFdroidDebugUnitTest
 
 # Compilación estricta
-./gradlew compileNormalDebugKotlin compileFdroidDebugKotlin
+./gradlew compileNormalDebugKotlin
 ```
 
 ### Paths Importantes
@@ -141,7 +138,6 @@ app/src/main/java/com/mardous/booming/
 
 ### Reglas Importantes
 - ✅ Ejecutar `./gradlew lint` antes de commit
-- ✅ Probar ambos flavors (normal y fdroid)
 - ✅ No usar `fallbackToDestructiveMigration()` en producción
 - ✅ Incrementar versión de DB en Room si hay cambios de schema
 
@@ -190,7 +186,6 @@ find app/build/outputs/apk -name "*.apk"
 | Componente | Estado | Versión |
 |------------|--------|---------|
 | **App** | ✅ Stable | 1.2.1 |
-| **Scanner** | ✅ Independiente | v5 |
 | **Database** | ✅ Room | v5 |
 | **CI/CD** | ✅ GitHub Actions | - |
 | **Tests** | ⚠️ Básico | - |

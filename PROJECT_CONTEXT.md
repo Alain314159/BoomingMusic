@@ -16,7 +16,7 @@
 - **Target SDK:** 36
 - **Compile SDK:** 36
 - **JVM Toolchain:** 21
-- **Flavors:** `normal`, `fdroid`
+- **Flavors:** Single flavor (normal)
 
 ---
 
@@ -104,11 +104,8 @@ markwon = [markwon-core, markwon-html, markwon-linkify]
 
 ### Product Flavors
 ```kotlin
-flavorDimensions += "version"
-productFlavors {
-    create("normal") { dimension = "version" }
-    create("fdroid") { dimension = "version" }
-}
+// Single flavor - no flavors configured
+// Previously had normal/fdroid flavors, now simplified to single build
 ```
 
 ### Versioning
@@ -323,7 +320,7 @@ androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 | Job | Descripción | Timeout |
 |-----|-------------|---------|
 | `check` | Lint (falla en warnings) | 20 min |
-| `build` | Build Debug (normal + fdroid) | 30 min |
+| `build` | Build Debug | 30 min |
 
 **Artefactos:**
 - Reportes lint (HTML + XML)
@@ -334,7 +331,7 @@ androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
 | Job | Descripción |
 |-----|-------------|
-| `build` | Build Release APK (normal + fdroid) |
+| `build` | Build Release APK |
 | `publish-release` | GitHub Release con APKs |
 
 **Secrets Requeridos:**
@@ -359,23 +356,23 @@ androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
 **Notas importantes:**
 - ⚠️ Los warnings de lint cuentan como **error**
-- ⚠️ Usa `compileNormalDebugKotlin compileFdroidDebugKotlin` (no `compileDebugKotlin`)
+- ⚠️ Usa `compileNormalDebugKotlin` (no `compileDebugKotlin`)
 - ⚠️ Todos los jobs deben pasar para que el quality gate sea exitoso
 
 ---
 
 ## 🐛 Bugs Conocidos y Fixes Recientes
 
-### ✅ Fixes del 27/02/2026 (COMPLETADOS)
+### ✅ Fixes Recientes (COMPLETADOS)
 
-#### 1. Errores de Compilación fdroidDebug
-**Problema:** Múltiples `Unresolved reference`
+#### 1. Eliminación del flavor F-Droid
+**Problema:** Proyecto con múltiples flavors que ya no se necesitaban
 
 **Solución aplicada:**
-- ✅ Agregado WorkManager dependency (`libs.androidx.work`)
-- ✅ Fix `MediaRepository`: Inyección directa de DAO (evita circularidad)
-- ✅ Fix `MediaScannerManager`: Inyección directa de DAO
-- ✅ Fix `CastManager`: `currentMediaItem` en lugar de `currentMediaItems`
+- ✅ Eliminado flavor `fdroid` de `build.gradle.kts`
+- ✅ Eliminado directorio `app/src/fdroid`
+- ✅ Actualizados workflows de GitHub Actions
+- ✅ Simplificado a single flavor build
 - ✅ Fix `LibraryViewModel`: Import faltante de `toSongs()`
 - ✅ Fix `FolderSelectionActivity`: Import de `StorageAccessLevel`
 
