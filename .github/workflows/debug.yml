@@ -1,0 +1,143 @@
+name: Debug - Detailed Build Info
+
+on:
+  push:
+    branches: [ "master", "stable" ]
+  pull_request:
+    branches: [ "master", "stable" ]
+
+jobs:
+  debug-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'zulu'
+          cache: gradle
+
+      - name: Display System Information
+        run: |
+          echo "=== System Information ==="
+          uname -a
+          java -version
+          ./gradlew --version
+          echo ""
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: List gradle tasks
+        run: |
+          echo "=== Available Gradle Tasks ==="
+          ./gradlew tasks --all 2>&1 | grep -E "assemble|lint|compile" | head -50
+          echo ""
+
+      - name: List build variants
+        run: |
+          echo "=== Project Structure ==="
+          ./gradlew projects
+          echo ""
+
+      - name: Check app source structure
+        run: |
+          echo "=== App Source Structure ==="
+          find app/src -type d -name "debug" -o -name "release" -o -name "main" | sort
+          echo ""
+          echo "=== Flavors in build.gradle.kts ==="
+          grep -A 20 "productFlavors\|buildTypes" app/build.gradle.kts || echo "No productFlavors found"
+          echo ""
+
+      - name: Clean build
+        run: |
+          echo "=== Cleaning Build ==="
+          ./gradlew clean --stacktrace
+          echo ""
+
+      - name: Compile Kotlin with full output
+        run: |
+          echo "=== Compiling Kotlin (compileDebugKotlin) ==="
+          ./gradlew compileDebugKotlin --stacktrace --info 2>&1 | tail -200
+          echo ""
+
+      - name: Run Lint with full output
+        run: |
+          echo "=== Running Lint (lintDebug) ==="
+          ./gradlew lintDebug --stacktrace --info 2>&1 | tail -200
+          echo ""
+
+      - name: Check APK Output Directory
+        if: always()
+        run: |
+          echo "=== APK Output Structure ==="
+          find app/build/outputs/apk -type f -name "*.apk" 2>/dev/null || echo "No APKs found"
+          find app/build/outputs -type d | grep -E "apk|debug|release" | sort || echo "No build outputs found"
+          echo ""
+
+      - name: Check lint reports
+        if: always()
+        run: |
+          echo "=== Lint Reports ==="
+          find app/build/reports -name "lint*" -type f 2>/dev/null | head -20
+          if [ -f app/build/reports/lint-results-debug.html ]; then
+            echo "Lint HTML report found"
+            grep -o "<issue\|</issue" app/build/reports/lint-results-debug.html | head -50
+          fi
+          if [ -f app/build/reports/lint-results-debug.xml ]; then
+            echo "Lint XML report found"
+            head -100 app/build/reports/lint-results-debug.xml
+          fi
+          echo ""
+
+      - name: Check compilation error logs
+        if: always()
+        run: |
+          echo "=== Build Report (if exists) ==="
+          find build/reports -name "*.html" -o -name "*.txt" 2>/dev/null | head -10
+          echo ""
+
+      - name: Assemble Debug APK with full output
+        run: |
+          echo "=== Assembling Debug APK (assembleDebug) ==="
+          ./gradlew assembleDebug --stacktrace --info 2>&1 | tail -200
+          echo ""
+
+      - name: Verify APK Output
+        if: always()
+        run: |
+          echo "=== Verifying APK Output ==="
+          find app/build/outputs/apk/debug -name "*.apk" -type f 2>/dev/null
+          if [ -f "app/build/outputs/apk/debug/app-debug.apk" ]; then
+            echo "✓ Found: app/build/outputs/apk/debug/app-debug.apk"
+            ls -lh app/build/outputs/apk/debug/app-debug.apk
+          fi
+          if [ -f "app/build/outputs/apk/debug/BoomingMusic-debug.apk" ]; then
+            echo "✓ Found: app/build/outputs/apk/debug/BoomingMusic-debug.apk"
+            ls -lh app/build/outputs/apk/debug/BoomingMusic-debug.apk
+          fi
+          echo ""
+
+      - name: Upload All Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-reports
+          path: |
+            app/build/reports/
+            build/reports/
+          retention-days: 30
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "=== Build Summary ==="
+          echo "Workflow completed. Check artifacts for detailed reports."
+          echo "Reports available in: debug-reports artifact"
