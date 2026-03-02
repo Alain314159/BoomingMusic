@@ -68,13 +68,13 @@ jobs:
       - name: Compile Kotlin with full output
         run: |
           echo "=== Compiling Kotlin (compileDebugKotlin) ==="
-          ./gradlew compileDebugKotlin --no-daemon 2>&1 | tail -200
+          ./gradlew compileDebugKotlin --no-daemon -Pksp.incremental=false 2>&1 | tail -200
           echo ""
 
       - name: Run Lint with full output
         run: |
           echo "=== Running Lint (lintDebug) ==="
-          ./gradlew lintDebug --no-daemon 2>&1 | tail -200
+          ./gradlew lintDebug --no-daemon -Pksp.incremental=false 2>&1 | tail -200
           echo ""
 
       - name: Check APK Output Directory
@@ -110,7 +110,7 @@ jobs:
       - name: Assemble Debug APK with full output
         run: |
           echo "=== Assembling Debug APK (assembleDebug) ==="
-          ./gradlew assembleDebug --no-daemon 2>&1 | tail -200
+          ./gradlew assembleDebug --no-daemon -Pksp.incremental=false 2>&1 | tail -200
           echo ""
 
       - name: Verify APK Output

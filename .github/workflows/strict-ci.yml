@@ -43,7 +43,7 @@ jobs:
         run: ./gradlew clean --no-daemon
 
       - name: Compile Kotlin (strict mode)
-        run: ./gradlew compileDebugKotlin --no-daemon
+        run: ./gradlew compileDebugKotlin --no-daemon -Pksp.incremental=false
         env:
           GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m"
           ORG_GRADLE_PROJECT_kotlin.caching.enabled: false
@@ -85,7 +85,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Lint (fail on any warning)
-        run: ./gradlew lintDebug --no-daemon
+        run: ./gradlew lintDebug --no-daemon -Pksp.incremental=false
         env:
           GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m"
           _JAVA_OPTIONS: "-Xmx4g"
@@ -136,7 +136,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --no-daemon
+        run: ./gradlew assembleDebug --no-daemon -Pksp.incremental=false
         env:
           GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m"
           _JAVA_OPTIONS: "-Xmx4g"
@@ -221,7 +221,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Release APK
-        run: ./gradlew assembleRelease --no-daemon
+        run: ./gradlew assembleRelease --no-daemon -Pksp.incremental=false
         env:
           GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m"
           _JAVA_OPTIONS: "-Xmx4g"
