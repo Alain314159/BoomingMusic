@@ -136,6 +136,9 @@ android {
     lint {
         abortOnError = true
         warning += listOf("ImpliedQuantity", "Instantiatable", "MissingQuantity", "MissingTranslation")
+        sarifReport = true
+        xmlReport = true
+        htmlReport = true
     }
     dependenciesInfo {
         includeInApk = false
