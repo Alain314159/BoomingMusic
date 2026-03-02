@@ -10,7 +10,7 @@ jobs:
   debug-build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,6 +23,9 @@ jobs:
           java-version: 21
           distribution: 'zulu'
           cache: gradle
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
       - name: Display System Information
         run: |
@@ -59,19 +62,19 @@ jobs:
       - name: Clean build
         run: |
           echo "=== Cleaning Build ==="
-          ./gradlew clean --stacktrace
+          ./gradlew clean --no-daemon
           echo ""
 
       - name: Compile Kotlin with full output
         run: |
           echo "=== Compiling Kotlin (compileDebugKotlin) ==="
-          ./gradlew compileDebugKotlin --stacktrace --info 2>&1 | tail -200
+          ./gradlew compileDebugKotlin --no-daemon 2>&1 | tail -200
           echo ""
 
       - name: Run Lint with full output
         run: |
           echo "=== Running Lint (lintDebug) ==="
-          ./gradlew lintDebug --stacktrace --info 2>&1 | tail -200
+          ./gradlew lintDebug --no-daemon 2>&1 | tail -200
           echo ""
 
       - name: Check APK Output Directory
@@ -107,7 +110,7 @@ jobs:
       - name: Assemble Debug APK with full output
         run: |
           echo "=== Assembling Debug APK (assembleDebug) ==="
-          ./gradlew assembleDebug --stacktrace --info 2>&1 | tail -200
+          ./gradlew assembleDebug --no-daemon 2>&1 | tail -200
           echo ""
 
       - name: Verify APK Output
