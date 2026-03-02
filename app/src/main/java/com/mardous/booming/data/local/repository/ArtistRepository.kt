@@ -24,10 +24,14 @@ import androidx.annotation.RequiresApi
 import com.mardous.booming.core.sort.AlbumSortMode
 import com.mardous.booming.core.sort.ArtistSortMode
 import com.mardous.booming.data.local.MediaQueryDispatcher
+import com.mardous.booming.data.local.room.dao.SongArtistDao
 import com.mardous.booming.data.model.Album
 import com.mardous.booming.data.model.Artist
+import com.mardous.booming.data.model.Song
 import com.mardous.booming.extensions.utilities.collapseSpaces
 import com.mardous.booming.util.Preferences
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 interface ArtistRepository {
     fun artists(): List<Artist>
@@ -37,23 +41,38 @@ interface ArtistRepository {
     fun albumArtist(artistName: String): Artist
     fun albumArtists(query: String): List<Artist>
     fun similarAlbumArtists(artist: Artist): List<Artist>
+    
+    // Multi-artist support methods
+    suspend fun artistByName(artistName: String): Artist?
+    suspend fun getSongsForArtist(artistName: String): List<Song>
+    suspend fun getArtistSongCount(artistName: String): Int
+    fun getAllArtistsFlow(): kotlinx.coroutines.flow.Flow<List<String>>
 }
 
 class RealArtistRepository(
     private val songRepository: RealSongRepository,
-    private val albumRepository: RealAlbumRepository
+    private val albumRepository: RealAlbumRepository,
+    private val songArtistDao: SongArtistDao
 ) : ArtistRepository {
 
     private val filterSingles: Boolean
         get() = Preferences.ignoreSingles
 
     override fun artists(): List<Artist> {
-        val songs = songRepository.songs(
-            songRepository.makeSongCursor(null, null, DEFAULT_SORT_ORDER)
-        )
+        // Use song_artist table for better multi-artist support
+        val allArtistNames = runBlocking { songArtistDao.getAllArtistsFlow().first() }
         val minimumSongCount = Preferences.minimumSongCountForArtist
-        val artists = splitIntoArtists(albumRepository.splitIntoAlbums(songs)).filter {
-            it.songCount >= minimumSongCount
+        
+        val artists = allArtistNames.mapNotNull { artistName ->
+            val songs = runBlocking { getSongsForArtist(artistName) }
+            if (songs.size >= minimumSongCount) {
+                val albums = albumRepository.splitIntoAlbums(songs)
+                Artist(
+                    id = songs.firstOrNull()?.artistId ?: -1,
+                    albums = with(AlbumSortMode.ArtistAlbums) { albums.sorted() },
+                    filterSingles = filterSingles
+                )
+            } else null
         }
         return sortArtists(artists)
     }
@@ -90,10 +109,21 @@ class RealArtistRepository(
     }
 
     override fun artists(query: String): List<Artist> {
-        val songs = songRepository.songs(
-            songRepository.makeSongCursor(AudioColumns.ARTIST + " LIKE ?", arrayOf("%$query%"), DEFAULT_SORT_ORDER)
-        )
-        val artists = splitIntoArtists(albumRepository.splitIntoAlbums(songs))
+        // Use song_artist table for search
+        val allArtistNames = runBlocking { songArtistDao.getAllArtistsFlow().first() }
+        val matchingArtists = allArtistNames.filter { it.contains(query, ignoreCase = true) }
+        
+        val artists = matchingArtists.mapNotNull { artistName ->
+            val songs = runBlocking { getSongsForArtist(artistName) }
+            if (songs.isNotEmpty()) {
+                val albums = albumRepository.splitIntoAlbums(songs)
+                Artist(
+                    id = songs.firstOrNull()?.artistId ?: -1,
+                    albums = with(AlbumSortMode.ArtistAlbums) { albums.sorted() },
+                    filterSingles = filterSingles
+                )
+            } else null
+        }
         return sortArtists(artists)
     }
 
@@ -207,6 +237,34 @@ class RealArtistRepository(
                     Artist.empty
                 }
             }
+    }
+
+    // =========================================================================
+    // Multi-Artist Support Methods
+    // =========================================================================
+
+    override suspend fun artistByName(artistName: String): Artist? {
+        val songs = getSongsForArtist(artistName)
+        return if (songs.isNotEmpty()) {
+            val albums = albumRepository.splitIntoAlbums(songs)
+            Artist(
+                id = songs.firstOrNull()?.artistId ?: -1,
+                albums = with(AlbumSortMode.ArtistAlbums) { albums.sorted() },
+                filterSingles = filterSingles
+            )
+        } else null
+    }
+
+    override suspend fun getSongsForArtist(artistName: String): List<Song> {
+        return songRepository.getSongsByArtist(artistName)
+    }
+
+    override suspend fun getArtistSongCount(artistName: String): Int {
+        return songArtistDao.countSongsForArtist(artistName)
+    }
+
+    override fun getAllArtistsFlow(): kotlinx.coroutines.flow.Flow<List<String>> {
+        return songArtistDao.getAllArtistsFlow()
     }
 
     private fun sortArtists(artists: List<Artist>): List<Artist> {

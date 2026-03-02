@@ -241,7 +241,11 @@ private val dataModule = module {
     } bind AlbumRepository::class
 
     single {
-        RealArtistRepository(songRepository = get(), albumRepository = get())
+        RealArtistRepository(
+            songRepository = get(),
+            albumRepository = get(),
+            songArtistDao = get()
+        )
     } bind ArtistRepository::class
 
     single {
