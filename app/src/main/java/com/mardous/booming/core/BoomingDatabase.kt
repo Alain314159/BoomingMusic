@@ -7,8 +7,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mardous.booming.data.local.room.*
 import com.mardous.booming.data.local.room.entity.ListenBrainzCredentialsEntity
 import com.mardous.booming.data.local.room.entity.ListenBrainzScrobbleQueueEntity
+import com.mardous.booming.data.local.room.entity.SongArtistEntity
 import com.mardous.booming.data.local.room.dao.ListenBrainzCredentialsDao
 import com.mardous.booming.data.local.room.dao.ListenBrainzScrobbleQueueDao
+import com.mardous.booming.data.local.room.dao.SongArtistDao
 
 @Database(
     entities = [
@@ -22,9 +24,10 @@ import com.mardous.booming.data.local.room.dao.ListenBrainzScrobbleQueueDao
         CanvasEntity::class,
         ScannedMediaCache::class,  // Nueva entidad para el scanner independiente (v5)
         ListenBrainzCredentialsEntity::class,  // ListenBrainz credentials (v6)
-        ListenBrainzScrobbleQueueEntity::class // ListenBrainz scrobble queue (v6)
+        ListenBrainzScrobbleQueueEntity::class, // ListenBrainz scrobble queue (v6)
+        SongArtistEntity::class  // Multi-artist support (v7)
     ],
-    version = 6,  // Incrementado de 5 a 6 para ListenBrainz integration
+    version = 7,  // Incrementado de 6 a 7 para multi-artist support
     exportSchema = false
 )
 abstract class BoomingDatabase : RoomDatabase() {
@@ -38,6 +41,7 @@ abstract class BoomingDatabase : RoomDatabase() {
     abstract fun scannedMediaCacheDao(): ScannedMediaCacheDao
     abstract fun listenBrainzCredentialsDao(): ListenBrainzCredentialsDao
     abstract fun listenBrainzScrobbleQueueDao(): ListenBrainzScrobbleQueueDao
+    abstract fun songArtistDao(): SongArtistDao
 
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -101,7 +105,7 @@ abstract class BoomingDatabase : RoomDatabase() {
                         `username` TEXT
                     )
                 """)
-                
+
                 // Scrobble queue table
                 db.execSQL("""
                     CREATE TABLE IF NOT EXISTS `listenbrainz_scrobble_queue` (
@@ -119,9 +123,38 @@ abstract class BoomingDatabase : RoomDatabase() {
                         `createdAt` INTEGER NOT NULL
                     )
                 """)
-                
+
                 // Índice para scrobble queue
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_listenbrainz_scrobble_queue_createdAt` ON `listenbrainz_scrobble_queue` (`createdAt`)")
+            }
+        }
+
+        // Migración para multi-artist support (versión 6 -> 7)
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Crear tabla song_artist para relación N:M
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `song_artist` (
+                        `song_id` INTEGER NOT NULL,
+                        `artist_name` TEXT NOT NULL,
+                        `artist_order` INTEGER NOT NULL DEFAULT 0,
+                        PRIMARY KEY(`song_id`, `artist_name`),
+                        FOREIGN KEY(`song_id`) REFERENCES SongEntity(`song_key`) ON DELETE CASCADE
+                    )
+                """)
+
+                // Índices para song_artist
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_song_artist_song_id` ON `song_artist` (`song_id`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_song_artist_artist_name` ON `song_artist` (`artist_name`)")
+
+                // Migrar datos existentes de SongEntity.artist_name a song_artist
+                // Esto preserva el artista principal como primer artista (orden 0)
+                db.execSQL("""
+                    INSERT OR IGNORE INTO song_artist (song_id, artist_name, artist_order)
+                    SELECT song_key, artist_name, 0
+                    FROM SongEntity
+                    WHERE artist_name IS NOT NULL AND artist_name != ''
+                """)
             }
         }
     }
