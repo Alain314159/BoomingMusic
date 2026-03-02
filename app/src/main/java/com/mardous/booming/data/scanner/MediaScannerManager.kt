@@ -196,7 +196,7 @@ class MediaScannerManager(
      */
     private suspend fun cleanupInvalidEntries() {
         // Eliminar entradas que no han sido actualizadas en CACHE_CLEANUP_DAYS días
-        val cleanupTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(CACHE_CLEANUP_DAYS)
+        val cleanupTime: Long = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(CACHE_CLEANUP_DAYS.toLong())
         cacheDao.purgeInvalid(cleanupTime)
     }
 
@@ -289,7 +289,7 @@ data class ScanFolderResult(
 class MediaScanWorker(
     context: Context,
     workerParams: WorkerParameters
-) : CoroutineWorker(context, workerParams) {
+) : CoroutineWorker(context, workerParams), KoinComponent {
 
     private val scannerManager: MediaScannerManager by inject()
 

@@ -116,7 +116,9 @@ class CastManager private constructor(
      */
     private fun updatePlayerForSession() {
         mediaSession?.let { session ->
-            session.setPlayer(currentPlayer)
+            currentPlayer?.let { player ->
+                session.setPlayer(player)
+            }
         }
     }
 
@@ -144,11 +146,7 @@ class CastManager private constructor(
             newPlayer.apply {
                 val currentMediaItem = oldPlayer.currentMediaItem
                 if (currentMediaItem != null) {
-                    setMediaItem(
-                        currentMediaItem,
-                        oldPlayer.currentMediaItemIndex,
-                        oldPlayer.currentPosition
-                    )
+                    setMediaItem(currentMediaItem, oldPlayer.currentPosition)
                 }
                 playWhenReady = oldPlayer.playWhenReady
                 prepare()

@@ -1,5 +1,6 @@
 package com.mardous.booming.di
 
+import android.content.Context
 import com.mardous.booming.data.remote.listenbrainz.api.ListenBrainzApi
 import com.mardous.booming.data.remote.listenbrainz.service.ListenBrainzScrobbleService
 import com.mardous.booming.playback.listenbrainz.ListenBrainzScrobbleObserver
@@ -8,7 +9,6 @@ import com.mardous.booming.work.ListenBrainzSyncWorker
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
-import org.koin.dsl.worker
 
 /**
  * Módulo Koin para ListenBrainz integration
@@ -40,8 +40,8 @@ val listenBrainzModule = module {
         ListenBrainzSettingsViewModel(scrobbleService = get())
     }
 
-    // Worker
-    worker {
-        ListenBrainzSyncWorker(androidContext(), get())
+    // Worker factory
+    factory { (context: Context) ->
+        ListenBrainzSyncWorker(context, get())
     }
 }

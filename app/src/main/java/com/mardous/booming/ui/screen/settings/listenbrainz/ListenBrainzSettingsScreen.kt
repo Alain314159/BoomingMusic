@@ -7,7 +7,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Login
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.OpenInNew
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -42,7 +49,8 @@ fun ListenBrainzSettingsScreen(
                 actions = {
                     IconButton(onClick = {
                         // Abrir perfil de ListenBrainz
-                        uiState.username?.let { username ->
+                        if (uiState is AuthState.LoggedIn) {
+                            val username = (uiState as AuthState.LoggedIn).username
                             val url = "https://listenbrainz.org/user/$username"
                             val customTabsIntent = CustomTabsIntent.Builder().build()
                             customTabsIntent.launchUrl(context, Uri.parse(url))

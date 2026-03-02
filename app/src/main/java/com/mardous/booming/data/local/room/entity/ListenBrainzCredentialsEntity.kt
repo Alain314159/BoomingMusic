@@ -13,6 +13,12 @@ data class ListenBrainzCredentialsEntity(
     val username: String? = null
 ) {
     /**
+     * Verifica si está logueado (token no vacío)
+     */
+    val isLoggedIn: Boolean
+        get() = userToken.isNotBlank()
+
+    /**
      * Convierte a modelo de dominio
      */
     fun toDomain(): com.mardous.booming.data.remote.listenbrainz.model.ListenBrainzCredentials {
@@ -22,7 +28,7 @@ data class ListenBrainzCredentialsEntity(
             isLoggedIn = true
         )
     }
-    
+
     companion object {
         /**
          * Crea desde modelo de dominio
