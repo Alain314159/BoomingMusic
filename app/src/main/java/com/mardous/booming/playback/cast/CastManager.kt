@@ -18,8 +18,10 @@
 package com.mardous.booming.playback.cast
 
 import android.content.Context
+import androidx.annotation.OptIn
 import androidx.media3.cast.CastPlayer
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import com.google.android.gms.cast.framework.CastContext
@@ -33,6 +35,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * Manages Cast functionality and CastPlayer lifecycle.
  * Handles switching between local (ExoPlayer) and remote (CastPlayer) playback.
  */
+@OptIn(markerClass = UnstableApi::class)
 class CastManager private constructor(
     private val context: Context
 ) : CastStateListener {
