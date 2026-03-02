@@ -625,15 +625,23 @@ abstract class AbsPlayerFragment(@LayoutRes layoutRes: Int) : Fragment(layoutRes
     }
 
     fun getSongArtist(song: Song): CharSequence {
-        val artistName = if (Preferences.preferAlbumArtistName) {
-            song.albumArtistName().displayArtistName()
+        // Multi-artist support: Show all artists
+        val artistNames = if (song.artists.size > 1) {
+            // Multiple artists: show all separated by commas
+            song.artists.joinToString(", ") { it.displayArtistName() }
         } else {
-            song.displayArtistName()
+            // Single artist: use existing logic
+            if (Preferences.preferAlbumArtistName) {
+                song.albumArtistName().displayArtistName()
+            } else {
+                song.displayArtistName()
+            }
         }
+        
         if (Preferences.displayAlbumTitle) {
-            return buildInfoString(artistName, song.albumName)
+            return buildInfoString(artistNames, song.albumName)
         }
-        return artistName
+        return artistNames
     }
 
     fun isExtraInfoEnabled(): Boolean =
