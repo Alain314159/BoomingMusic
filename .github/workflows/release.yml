@@ -36,13 +36,13 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build app
-        run: ./gradlew assembleNormalRelease
+        run: ./gradlew assembleRelease
 
       - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
-          name: apk-normal-release
-          path: app/build/outputs/apk/normal/release/*-release.apk
+          name: apk-release
+          path: app/build/outputs/apk/release/*-release.apk
 
   publish-release:
     needs: build
@@ -72,4 +72,4 @@ jobs:
           prerelease: ${{ steps.prerelease.outputs.value }}
           generate_release_notes: true
           files: |
-            release-apks/*/release/*-normal-release.apk
+            release-apks/*/release/*-release.apk
