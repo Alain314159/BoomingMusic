@@ -46,6 +46,13 @@
 
     <Preference
         app:layout="@layout/list_item_view"
+        app:title="@string/listenbrainz_title"
+        app:summary="@string/listenbrainz_summary"
+        app:icon="@drawable/ic_music_note_24dp"
+        app:key="listenbrainz"/>
+
+    <Preference
+        app:layout="@layout/list_item_view"
         app:title="@string/about_title"
         app:icon="@drawable/ic_info_24dp"
         app:key="about"/>

@@ -140,6 +140,12 @@ class AdvancedPreferencesFragment : PreferenceScreenFragment() {
     }
 }
 
+class ListenBrainzPreferencesFragment : PreferenceScreenFragment() {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        addPreferencesFromResource(R.xml.preferences_listenbrainz)
+    }
+}
+
 open class PreferenceScreenFragment : PreferenceFragmentCompat(),
     SharedPreferences.OnSharedPreferenceChangeListener {
 

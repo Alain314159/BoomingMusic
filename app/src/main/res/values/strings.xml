@@ -655,6 +655,8 @@
     <string name="advanced_summary">In-app language and other settings for advanced users.</string>
     <string name="update_title">Update</string>
     <string name="update_summary">Settings for app updates.</string>
+    <string name="listenbrainz_title">ListenBrainz</string>
+    <string name="listenbrainz_summary">Track your listening history and get statistics.</string>
     <string name="about_title">About</string>
     <string name="about_summary">Booming Music %s, touch for more info.</string>
 
