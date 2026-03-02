@@ -134,29 +134,46 @@
 
 ## 🔜 PRÓXIMAMENTE (v1.4.0 - v1.5.0)
 
-### 🎨 Multi-Artist Support (0%) - 📋 ALTA PRIORIDAD
-**Problema actual:** Una canción solo puede tener UN artista
-
-**Solución propuesta:**
-- [ ] Nueva entidad `SongArtistEntity` (relación N:M)
-- [ ] Modificar `SongEntity` para soportar múltiples artistas
-- [ ] Actualizar todos los DAOs que usan `artist`
-- [ ] Actualizar repositories (ArtistRepository, SongRepository)
-- [ ] Actualizar ViewModels (ArtistDetailViewModel, LibraryViewModel)
-- [ ] Actualizar UI (ArtistAdapter, ArtistDetailActivity)
-- [ ] Migración de base de datos v6 → v7
-- [ ] Backward compatibility para canciones con 1 artista
-
-**Impacto:** ALTO - Cambia estructura de datos fundamental
-
+### 🎨 Multi-Artist Support (25%) - 🚧 EN PROGRESO
+**Versión:** v1.4.0  
 **Estimado:** 4-6 semanas
 
+**Problema actual:** Una canción solo puede tener UN artista
+
+**✅ COMPLETADO (Fase 1 - Database):**
+- [x] `SongArtistEntity` - Entidad para relación N:M
+- [x] `SongArtistDao` - DAO con todas las operaciones CRUD
+- [x] `BoomingDatabase v7` - DB actualizada
+- [x] `MIGRATION_6_7` - Migración de datos existentes
+- [x] Documentación completa
+
+**⏳ PENDIENTE:**
+- [ ] **Fase 2: Repository** (8h)
+  - [ ] Actualizar `SongRepository`
+  - [ ] Actualizar `ArtistRepository`
+  - [ ] `Song` model: `artistName` → `List<String> artists`
+  - [ ] Mappers actualizados
+
+- [ ] **Fase 3: UI** (12h)
+  - [ ] Player UI - mostrar múltiples artistas
+  - [ ] Artist library - usar nueva tabla
+  - [ ] Tag editor - editar múltiples artistas
+  - [ ] Search - búsqueda por cualquier artista
+
+- [ ] **Fase 4: Testing** (6h)
+  - [ ] Unit tests para DAO
+  - [ ] Integration tests
+  - [ ] Migration tests
+
+**Impacto:** ALTO - Cambia estructura de datos fundamental  
+**Riesgo:** MEDIO - Migración automática preserva datos
+
 **Criterios de aceptación:**
-- Una canción puede tener 2+ artistas
-- UI muestra "Artista 1, Artista 2, ..."
-- Búsqueda por cualquier artista funciona
-- Álbumes colaborativos se muestran correctamente
-- Estadísticas separadas por artista
+- ✅ Una canción puede tener 2+ artistas
+- ✅ UI muestra "Artista 1, Artista 2, ..."
+- ✅ Click en artista → ArtistDetail
+- ✅ Búsqueda por cualquier artista funciona
+- ✅ Backward compatible (canciones existentes)
 
 ---
 
