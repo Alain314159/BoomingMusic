@@ -147,13 +147,45 @@ abstract class BoomingDatabase : RoomDatabase() {
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_song_artist_artist_name` ON `song_artist` (`artist_name`)")
 
                 // Migrar datos existentes de SongEntity.artist_name a song_artist
-                // Esto preserva el artista principal como primer artista (orden 0)
+                // Validar que song_key no sea NULL y artist_name sea válido
                 db.execSQL("""
                     INSERT OR IGNORE INTO song_artist (song_id, artist_name, artist_order)
-                    SELECT song_key, artist_name, 0
+                    SELECT 
+                        song_key, 
+                        TRIM(artist_name), 
+                        0
                     FROM SongEntity
-                    WHERE artist_name IS NOT NULL AND artist_name != ''
+                    WHERE artist_name IS NOT NULL 
+                      AND TRIM(artist_name) != ''
+                      AND song_key IS NOT NULL
                 """)
+                
+                // Log de migración para debugging
+                val cursor = db.query("SELECT COUNT(*) FROM song_artist")
+                cursor.moveToFirst()
+                val migratedCount = cursor.getInt(0)
+                cursor.close()
+                
+                android.util.Log.d("Migration", "MIGRATION_6_7: Migrated $migratedCount artist relationships")
+                
+                // Validar integridad: verificar que todos los song_id existan en SongEntity
+                val invalidCursor = db.query("""
+                    SELECT COUNT(*) FROM song_artist sa
+                    LEFT JOIN SongEntity se ON sa.song_id = se.song_key
+                    WHERE se.song_key IS NULL
+                """)
+                invalidCursor.moveToFirst()
+                val invalidCount = invalidCursor.getInt(0)
+                invalidCursor.close()
+                
+                if (invalidCount > 0) {
+                    android.util.Log.w("Migration", "MIGRATION_6_7: Found $invalidCount orphaned artist relationships")
+                    // Limpiar relaciones huérfanas
+                    db.execSQL("""
+                        DELETE FROM song_artist
+                        WHERE song_id NOT IN (SELECT song_key FROM SongEntity)
+                    """)
+                }
             }
         }
     }

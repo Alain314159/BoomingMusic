@@ -97,13 +97,13 @@ class RealSongRepository(
 
     override fun songs(cursor: Cursor?): List<Song> {
         return cursor.use {
-            it.mapIfValid { getSongFromCursorImpl(this) }
+            it.mapIfValid { getSongFromCursorImpl(this, null) }
         }
     }
 
     override fun song(cursor: Cursor?): Song {
         return cursor.use {
-            it.takeOrDefault(Song.emptySong) { getSongFromCursorImpl(this) }
+            it.takeOrDefault(Song.emptySong) { getSongFromCursorImpl(this, null) }
         }
     }
 
@@ -375,7 +375,11 @@ class RealSongRepository(
         return song(cursor)
     }
 
-    private fun getSongFromCursorImpl(cursor: Cursor): Song {
+    /**
+     * Implementation de Song desde Cursor - SIN operaciones suspend
+     * Usa artistName de MediaStore directamente
+     */
+    private fun getSongFromCursorImpl(cursor: Cursor, artists: List<String>? = null): Song {
         val id = cursor.getLong(0)
         val data = cursor.getString(cursor.getColumnIndexOrThrow(AudioColumns.DATA))
         val title = cursor.getString(cursor.getColumnIndexOrThrow(AudioColumns.TITLE))
@@ -409,18 +413,11 @@ class RealSongRepository(
         val albumArtistName = cursor.getStringSafe(AudioColumns.ALBUM_ARTIST)
         val genreName = cursor.getStringSafe(AudioColumns.GENRE)
 
-        // CRITICAL: Get multiple artists from song_artist table
-        // Use runBlocking because we're in a suspend context
-        val artists = kotlinx.coroutines.runBlocking {
-            try {
-                getArtistsForSong(id).takeIf { it.isNotEmpty() }
-                    ?: listOfNotNull(artistName.takeUnless { it.isBlank() })
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to get artists for song $id", e)
-                // Fallback to MediaStore artistName
-                listOfNotNull(artistName.takeUnless { it.isBlank() })
-            }
-        }
+        // Use provided artists or fallback to MediaStore artistName
+        // For full multi-artist support, use getSongWithArtists() suspend method
+        val songArtists = artists
+            ?.takeIf { it.isNotEmpty() }
+            ?: listOfNotNull(artistName.takeUnless { it.isBlank() })
 
         return Song(
             id = id,
@@ -438,8 +435,27 @@ class RealSongRepository(
             artistName = artistName,
             albumArtistName = albumArtistName,
             genreName = genreName,
-            artists = artists  // NEW: List of artists (must be last)
+            artists = songArtists
         )
+    }
+
+    /**
+     * Obtiene Song con artistas múltiples desde song_artist table
+     * Versión suspend con soporte completo para multi-artist (v7)
+     */
+    private suspend fun getSongWithArtists(cursor: Cursor): Song {
+        val id = cursor.getLong(0)
+        
+        // Get artists from song_artist table
+        val artists = runCatching {
+            getArtistsForSong(id)
+        }.getOrElse { exception ->
+            Log.e(TAG, "Failed to get artists for song $id", exception)
+            emptyList()
+        }
+        
+        // Create base song with artists
+        return getSongFromCursorImpl(cursor, artists.ifEmpty { null })
     }
 
     companion object {

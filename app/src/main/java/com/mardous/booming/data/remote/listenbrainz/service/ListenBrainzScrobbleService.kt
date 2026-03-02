@@ -62,15 +62,27 @@ class ListenBrainzScrobbleService(
     
     /**
      * Valida token y guarda credenciales si es válido
+     * Valida formato del token antes de llamar a la API
      */
     suspend fun validateAndSaveToken(token: String): Result<String> {
+        // Validar formato del token antes de llamar API
+        // ListenBrainz tokens son típicamente 32-64 caracteres alfanuméricos
+        val trimmedToken = token.trim()
+        if (trimmedToken.isBlank()) {
+            return Result.failure(IllegalArgumentException("Token cannot be empty"))
+        }
+        
+        if (!trimmedToken.matches(Regex("^[a-zA-Z0-9_-]{32,64}$"))) {
+            return Result.failure(IllegalArgumentException("Invalid token format. ListenBrainz tokens are 32-64 alphanumeric characters."))
+        }
+        
         return runCatching {
             // Validar token con API
-            val response = api.validateToken(token).getOrThrow()
-            
+            val response = api.validateToken(trimmedToken).getOrThrow()
+
             if (response.status == "ok" && response.userName != null) {
                 // Token válido, guardar credenciales
-                saveCredentials(token, response.userName)
+                saveCredentials(trimmedToken, response.userName)
                 response.userName
             } else {
                 throw Exception(response.error ?: "Invalid token")

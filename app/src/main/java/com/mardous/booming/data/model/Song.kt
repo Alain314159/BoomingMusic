@@ -48,7 +48,7 @@ open class Song(
     open val albumArtistName: String?,
     open val genreName: String?,
     // NEW: Multi-artist support (v1.4.0) - defaults to single artist from artistName
-    val artists: List<String> = listOfNotNull(artistName.takeUnless { it.isBlank() })
+    open val artists: List<String> = listOfNotNull(artistName.takeUnless { it.isBlank() })
 ) : Parcelable, FileSystemItem {
 
     // Computed property for primary artist (first in list)

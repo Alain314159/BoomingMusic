@@ -276,28 +276,47 @@ data class LibraryStats(
 
 /**
  * Extiende ScannedMediaCache para convertir a Song.
+ * Retorna null si los datos son inválidos.
  */
 fun ScannedMediaCache.toSong(): Song? {
-    // Validar que tengamos al menos título o filePath
+    // Validaciones estrictas para prevenir NPE y crashes
+    if (filePath.isBlank()) {
+        android.util.Log.w("MediaRepository", "Skipping cache entry with blank filePath: $this")
+        return null
+    }
+    
     if (title.isNullOrBlank() && fileName.isBlank()) {
+        android.util.Log.w("MediaRepository", "Skipping cache entry with blank title and fileName: $this")
+        return null
+    }
+    
+    // Validar duración - songs con duración <= 0 no son reproducibles
+    val songDuration = duration ?: 0
+    if (songDuration <= 0) {
+        android.util.Log.w("MediaRepository", "Skipping cache entry with invalid duration ($songDuration): $this")
         return null
     }
 
-    return Song(
-        id = mediaStoreId ?: 0,  // Si no hay MediaStore ID, usar 0
-        data = filePath,
-        title = title ?: fileName,
-        trackNumber = trackNumber ?: 0,
-        year = year ?: 0,
-        size = fileSize,
-        duration = duration ?: 0,
-        dateAdded = scanTimestamp / 1000,
-        rawDateModified = lastModified / 1000,
-        albumId = 0,  // No disponible en cache
-        albumName = album ?: "",
-        artistId = 0,  // No disponible en cache
-        artistName = artist ?: "",
-        albumArtistName = albumArtist,
-        genreName = genre
-    )
+    return try {
+        Song(
+            id = mediaStoreId ?: 0,
+            data = filePath,
+            title = title.takeUnless { it.isNullOrBlank() } ?: fileName,
+            trackNumber = trackNumber ?: 0,
+            year = year ?: 0,
+            size = fileSize,
+            duration = songDuration,
+            dateAdded = scanTimestamp / 1000,
+            rawDateModified = lastModified / 1000,
+            albumId = 0,  // No disponible en cache
+            albumName = album.takeUnless { it.isNullOrBlank() } ?: "Unknown Album",
+            artistId = 0,  // No disponible en cache
+            artistName = artist.takeUnless { it.isNullOrBlank() } ?: "Unknown Artist",
+            albumArtistName = albumArtist,
+            genreName = genre
+        )
+    } catch (e: Exception) {
+        android.util.Log.e("MediaRepository", "Error creating Song from cache: $this", e)
+        null
+    }
 }

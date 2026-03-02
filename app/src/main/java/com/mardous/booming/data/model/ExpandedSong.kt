@@ -22,7 +22,8 @@ class ExpandedSong(
     val playCount: Int,
     val skipCount: Int,
     val lastPlayedAt: Long,
-    val isFavorite: Boolean
+    val isFavorite: Boolean,
+    override val artists: List<String> = emptyList()  // Multi-artist support
 ) : Song(
     id,
     data,
@@ -39,7 +40,7 @@ class ExpandedSong(
     artistName,
     albumArtistName,
     genreName,
-    artists = listOfNotNull(artistName.takeUnless { it.isBlank() })  // Default to single artist
+    artists = artists.takeIf { it.isNotEmpty() } ?: listOfNotNull(artistName.takeUnless { it.isBlank() })
 ) {
 
     constructor(
@@ -49,24 +50,25 @@ class ExpandedSong(
         lastPlayedAt: Long,
         isFavorite: Boolean
     ) : this(
-        song.id,
-        song.data,
-        song.title,
-        song.trackNumber,
-        song.year,
-        song.size,
-        song.duration,
-        song.dateAdded,
-        song.rawDateModified,
-        song.albumId,
-        song.albumName,
-        song.artistId,
-        song.artistName,
-        song.albumArtistName,
-        song.genreName,
-        playCount,
-        skipCount,
-        lastPlayedAt,
-        isFavorite
+        id = song.id,
+        data = song.data,
+        title = song.title,
+        trackNumber = song.trackNumber,
+        year = song.year,
+        size = song.size,
+        duration = song.duration,
+        dateAdded = song.dateAdded,
+        rawDateModified = song.rawDateModified,
+        albumId = song.albumId,
+        albumName = song.albumName,
+        artistId = song.artistId,
+        artistName = song.artistName,
+        albumArtistName = song.albumArtistName,
+        genreName = song.genreName,
+        playCount = playCount,
+        skipCount = skipCount,
+        lastPlayedAt = lastPlayedAt,
+        isFavorite = isFavorite,
+        artists = song.artists  // Preserve multi-artist from Song
     )
 }
