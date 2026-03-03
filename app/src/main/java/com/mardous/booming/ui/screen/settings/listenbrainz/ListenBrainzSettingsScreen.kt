@@ -7,16 +7,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Login
 import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Cloud
-import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.LinkOff
@@ -52,7 +52,7 @@ fun ListenBrainzSettingsScreen(
                 title = { Text("ListenBrainz") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
@@ -65,7 +65,7 @@ fun ListenBrainzSettingsScreen(
                             customTabsIntent.launchUrl(context, url.toUri())
                         }
                     }) {
-                        Icon(Icons.Default.OpenInNew, contentDescription = "View Profile")
+                        Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = "View Profile")
                     }
                 }
             )
@@ -190,7 +190,7 @@ fun ListenBrainzLoginCard(
             
             // Enlace de ayuda
             TextButton(onClick = onHelpClick) {
-                Icon(Icons.Outlined.Help, contentDescription = null)
+                Icon(Icons.AutoMirrored.Outlined.Help, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Get token from ListenBrainz")
             }
