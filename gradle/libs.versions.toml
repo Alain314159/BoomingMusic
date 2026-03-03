@@ -1,6 +1,6 @@
 [versions]
 agp = "8.13.2"
-ksp = "2.3.5"
+ksp = "2.3.6"
 kotlin = "2.3.10"
 
 kotlinDatetime = "0.7.1"
@@ -139,6 +139,9 @@ fastscroll = { module = "me.zhanghai.android.fastscroll:library", version.ref = 
 
 customactivityoncrash = { module = "cat.ereza:customactivityoncrash", version.ref = "customactivityoncrash" }
 keyboardvisibilityevent = { module = "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent", version.ref = "keyboardvisibilityevent" }
+
+# Debug logging
+timber = { module = "com.jakewharton.timber:timber", version = "5.0.1" }
 
 taglib = { module = "io.github.kyant0:taglib", version.ref = "taglib" }
 jaudiotagger = { module = "com.github.Adonai:jaudiotagger", version.ref = "jaudiotagger" }

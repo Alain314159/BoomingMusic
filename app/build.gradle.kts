@@ -229,6 +229,9 @@ dependencies {
     implementation(libs.customactivityoncrash)
     implementation(libs.keyboardvisibilityevent)
 
+    // Debug logging (only in debug builds)
+    debugImplementation(libs.timber)
+
     implementation(libs.taglib)
     implementation(libs.jaudiotagger)
 

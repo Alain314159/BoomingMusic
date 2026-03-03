@@ -43,12 +43,14 @@ import com.mardous.booming.data.local.ReplayGainTagExtractor
 import com.mardous.booming.ui.screen.MainActivity
 import com.mardous.booming.ui.screen.error.ErrorActivity
 import com.mardous.booming.ui.screen.settings.SettingsScreen
+import com.mardous.booming.util.DebugLogger
 import com.mardous.booming.util.EXPERIMENTAL_UPDATES
 import com.mardous.booming.util.Preferences.getDayNightMode
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
+import timber.log.Timber
 
 fun appContext(): Context = App.instance.applicationContext
 
@@ -58,13 +60,37 @@ class App : Application(), SingletonImageLoader.Factory {
         super.onCreate()
         instance = this
 
+        // Initialize debug logging first (only in DEBUG builds)
+        DebugLogger.initialize(this)
+        if (BuildConfig.DEBUG) {
+            Timber.plant(object : Timber.Tree() {
+                override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+                    // Log to file via DebugLogger
+                    val safeTag = tag ?: "App"
+                    when (priority) {
+                        Log.VERBOSE -> DebugLogger.v(safeTag, message)
+                        Log.DEBUG -> DebugLogger.d(safeTag, message)
+                        Log.INFO -> DebugLogger.i(safeTag, message)
+                        Log.WARN -> DebugLogger.w(safeTag, message, t ?: Exception("Unknown warning"))
+                        Log.ERROR -> DebugLogger.e(safeTag, message, t ?: Exception("Unknown error"))
+                        Log.ASSERT -> DebugLogger.wtf(safeTag, message, t ?: Exception("Unknown assert"))
+                    }
+                    t?.let { DebugLogger.logException(safeTag, it, message) }
+                }
+            })
+            Timber.d("Debug logging initialized")
+        }
+
         startKoin {
             androidContext(this@App)
             workManagerFactory()
             modules(appModules)
         }
 
-        if (BuildConfig.DEBUG) enableStrictMode()
+        if (BuildConfig.DEBUG) {
+            enableStrictMode()
+            setupCrashHandler()
+        }
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         // we cannot call setDefaultValues for multiple fragment based XML preference
@@ -158,23 +184,60 @@ class App : Application(), SingletonImageLoader.Factory {
 
         val imageLoader = SingletonImageLoader.get(this)
         imageLoader.memoryCache?.clear()
+
+        if (BuildConfig.DEBUG) {
+            DebugLogger.d("App", "onTrimMemory: level=$level")
+        }
+    }
+
+    private fun setupCrashHandler() {
+        Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            DebugLogger.logCrash(throwable, "Uncaught exception in thread: ${thread.name}")
+            
+            // Give logging time to flush to disk
+            try {
+                Thread.sleep(2000)
+            } catch (e: InterruptedException) {
+                Thread.currentThread().interrupt()
+            }
+        }
+        Timber.d("Crash handler installed")
     }
 
     private fun enableStrictMode() {
-        StrictMode.setVmPolicy(
-            VmPolicy.Builder()
-                .detectAll()
-                .penaltyLog()
-                .build()
-        )
+        val executor = java.util.concurrent.Executors.newSingleThreadExecutor()
+        
+        val vmPolicy = VmPolicy.Builder()
+            .detectAll()
+            .penaltyLog()
+            .penaltyListener(executor) { violation ->
+                val message = "VM Policy violation: ${violation.javaClass.simpleName}"
+                Timber.e(message)
+                DebugLogger.logStrictModeViolation("VM", message)
+            }
+            .build()
+        StrictMode.setVmPolicy(vmPolicy)
 
-        StrictMode.setThreadPolicy(
-            ThreadPolicy.Builder()
-                .detectAll()
-                .penaltyLog()
-                .penaltyFlashScreen()
-                .build()
-        )
+        val threadPolicy = ThreadPolicy.Builder()
+            .detectAll()
+            .penaltyLog()
+            .penaltyFlashScreen()
+            .penaltyListener(executor) { violation ->
+                val message = "Thread Policy violation: ${violation.javaClass.simpleName}"
+                Timber.e(message)
+                DebugLogger.logStrictModeViolation("Thread", message)
+            }
+            .build()
+        StrictMode.setThreadPolicy(threadPolicy)
+
+        Timber.d("StrictMode enabled with logging")
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        if (BuildConfig.DEBUG) {
+            DebugLogger.close()
+        }
     }
 
     companion object {
