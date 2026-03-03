@@ -356,34 +356,232 @@
 
 ---
 
+## 🎨 MEJORAS UI/UX (v1.5.0 - v2.0.0)
+
+### Animaciones y Feedback (v1.5.0)
+- [ ] **Animaciones de transición** - Fade/scale al cambiar canción (200-300ms)
+- [ ] **MiniPlayer → Full Player animado** - Shared element transition con morphing
+- [ ] **Like button con animación** - Heart burst particles + scale spring
+- [ ] **Shuffle/Repeat con rotate** - Icono rota 360° al activar/desactivar
+- [ ] **Lyrics scroll suave** - Smooth scroll con highlight animado
+- [ ] **Loading skeletons** - En vez de spinners, esqueletos grises mientras carga
+- [ ] **Ripple effect mejorado** - Ondas más visibles en todos los botones
+- [ ] **Page transitions** - Slide + fade entre pantallas (Library → Player → Queue)
+- [ ] **Haptic feedback** - Vibración sutil al tocar botones (play, pause, like, skip)
+
+### Personalización (v1.6.0)
+- [ ] **Player Skins (temas visuales)** - 5-7 temas adicionales:
+  - Midnight Dark (negro puro + acentos azules, AMOLED)
+  - Sunset Vibes (gradientes naranja/rosa)
+  - Retro Wave (neón + grid synthwave años 80)
+  - Seasonal (auto-cambia por estación)
+  - Halloween/Navidad (temas especiales)
+- [ ] **Gestos personalizables** - Configurar swipe arriba/abajo/izq/der → acción
+- [ ] **Fullscreen player inmersivo** - Player ocupa toda la pantalla con background animado
+
+### Información y Estadísticas (v1.7.0)
+- [ ] **Dashboard de estadísticas "Music Insights"** - Mostrar:
+  - Tiempo total escuchado (horas/días)
+  - Canciones reproducidas (total, esta semana, este mes)
+  - Racha de días 🔥 (días consecutivos escuchando)
+  - Heatmap (como GitHub contributions - días/horas más activos)
+  - Top 50: canciones, artistas, álbumes, géneros
+  - Comparativas ("Escuchaste 23% más que la semana pasada")
+  - Exportar: Compartir imagen en redes sociales
+- [ ] **Logros/Gamificación** - Sistema de logros:
+  - Primeros Pasos (1 play)
+  - Club del Siglo (100 plays)
+  - Maratonista (24h seguidas)
+  - Explorador (50 artistas diferentes)
+  - Fanático Leal (100 veces mismo artista)
+  - Nocturno (escuchar después de 3 AM)
+  - Explorador de Géneros (10 géneros)
+  - Completista (álbum completo sin saltar)
+
+### Búsqueda (v1.5.0)
+- [ ] **Smart Search** - Búsqueda inteligente:
+  - Fuzzy search (tolera errores ortográficos)
+  - Buscar por letra de canción
+  - Buscar por humor/género ("triste", "fiesta", "energía")
+  - Buscar por década ("canciones de los 90s")
+  - Búsqueda por voz (speech-to-text)
+  - Historial de búsquedas recientes
+  - Búsquedas guardadas (favoritos)
+
+### Widgets y Lock Screen (v1.6.0)
+- [ ] **Now Playing en lock screen** - Mostrar lyrics actuales en pantalla de bloqueo
+- [ ] **Widgets interactivos** - Widgets con:
+  - Lyrics actuales + controles
+  - Estadísticas rápidas (tiempo, racha, top artista)
+  - Album art grande + controles mínimos
+
+### Funciones Virales (v1.8.0)
+- [ ] **Time Capsule** - Cápsula del tiempo musical:
+  - Crear cápsula con canciones + mensaje
+  - Programar fecha de desbloqueo
+  - Notificación cuando se desbloquea
+  - Compartir cápsula (exportar)
+  - Cápsulas de amigos (intercambiar)
+
+---
+
+## 🔍 DESCUBRIMIENTO MUSICAL (v1.7.0 - v1.9.0)
+
+### Smart Radio (v1.7.0)
+- [ ] **Radio basada en canción** - "Radio de [canción actual]"
+  - Genera playlist de 20-50 canciones similares
+  - Algoritmo considera: artista, álbum, género, tempo, energía, patrón de usuario
+- [ ] **Radio de artista** - Playlist con canciones del artista + similares
+- [ ] **Artistas similares** - Muestra artistas parecidos con % match (87% similar)
+- [ ] **Match percentage** - Muestra % de similitud para cada recomendación
+
+### Descubrimiento Semanal (v1.8.0)
+- [ ] **Descubrimiento semanal** - Playlist automática cada lunes
+  - 30 canciones nuevas que no has escuchado
+  - Basado en tu gusto musical
+- [ ] **Tendencias personales** - "Tus canciones trending esta semana"
+- [ ] **Porque escuchaste** - Explica por qué recomienda cada canción
+  - "Porque escuchaste 234 horas de Reggaeton"
+  - "Porque escuchaste mucho este álbum la semana pasada"
+
+### Mood Playlists (v1.9.0)
+- [ ] **Playlists por estado de ánimo** - Automáticas según hora/contexto:
+  - Morning Energy (6-9 AM) - Pop, Rock
+  - Night Chill (10-11 PM) - Ambient, Acoustic
+  - Party (Viernes noche) - Reggaeton, Electronic
+  - Focus (Lunes-Miércoles) - Classical, Lo-fi
+  - Relaxed (Fin de semana) - Jazz, Bossa
+  - Sad (baladas, acoustic)
+  - Happy (pop, dance)
+- [ ] **Explorar géneros** - "Nunca escuchaste Salsa, prueba estas 10 canciones"
+
+---
+
+## ⚡ PERFORMANCE (v1.5.0 - v1.6.0)
+
+### Inicio y Carga (v1.5.0)
+- [ ] **Inicio instantáneo** - Cold start < 500ms:
+  - Lazy initialization de Koin modules
+  - Splash screen con tema dinámico
+  - Precarga en background (StartupWorker)
+  - Critical modules primero, deferred modules después
+
+### Cache (v1.5.0)
+- [ ] **Cache multi-nivel** - 3 niveles:
+  - Nivel 1: Memoria (50MB, LruCache) - rápido, volátil
+  - Nivel 2: Disco (500MB, DiskLruCache) - lento, persistente
+  - Nivel 3: Base de datos (estructurado) - Room
+  - Lo más usado carga instantáneo
+
+### Optimizaciones (v1.6.0)
+- [ ] **Lazy loading en listas** - Carga de 100 en 100 cuando scrolleas
+- [ ] **Imagen cache agresivo** - Cache de album arts de 500MB
+- [ ] **Background worker optimizado** - Scanner solo con datos, no WiFi
+- [ ] **Memory management** - Liberar memoria en background 10+ min
+- [ ] **Database índices optimizados** - Índices en songs, artists, albums
+- [ ] **Build times -50%** - Koin modules separados, KSP cache
+- [ ] **Reduce APK size** - WebP en vez de PNG, R8 optimizado
+- [ ] **Battery optimization** - Menos wake locks, sync menos frecuente
+- [ ] **Network retry inteligente** - Reintentar solo con WiFi
+
+---
+
+## 🎛️ OPCIONES DE AUDIO (Settings → Audio) (v1.6.0)
+
+> **Nota:** Estas opciones van en el menú de 3 puntitos del player → "Opciones de audio" o en Settings → Audio
+
+### Procesamiento de Audio (v1.6.0)
+- [ ] **Speed control** - Cambiar velocidad (0.5x - 2x) sin cambiar tono
+  - Slider: 0.5x | 0.75x | 1.0x | 1.25x | 1.5x | 1.75x | 2.0x
+- [ ] **Pitch shift** - Cambiar tono (-2 a +2 semitonos)
+  - Slider: -2 | -1 | 0 | +1 | +2
+- [ ] **Volume boost** - Normalizador de volumen (más fuerte sin distorsionar)
+  - Toggle: Off | On (gain: +3dB, +6dB, +9dB)
+- [ ] **Bass boost** - Potenciar graves (independiente del ecualizador)
+  - Slider: 0% | 25% | 50% | 75% | 100%
+- [ ] **Virtualizer** - Sonido surround 3D (simulado)
+  - Toggle: Off | On (intensidad ajustable)
+
+### Transiciones (v1.6.0)
+- [ ] **Fade in/out** - Transición suave al inicio/final de canción
+  - Toggle: Off | On (duración: 3s, 5s, 10s)
+- [ ] **Crossfade** - Superponer final con inicio de siguiente canción
+  - Toggle: Off | On (duración: 3s, 5s, 8s, 10s)
+  - Gapless mejorado (optimizar buffer)
+
+### Modos Especiales (v1.6.0)
+- [ ] **Mono audio** - Mezclar L+R a mono para audífonos mono
+  - Toggle: Off | On
+- [ ] **Audio balance** - Ajustar balance izquierda/derecha manualmente
+  - Slider: L100% | L75% | L50% | Center | R50% | R75% | R100%
+- [ ] **Study Mode** - Música sin lyrics + volumen bajo
+  - Toggle: Off | On
+  - Filtra canciones instrumentales
+  - Reduce volumen automáticamente
+- [ ] **Workout Mode** - BPM matching para ejercicio
+  - Toggle: Off | On
+  - Filtra canciones por BPM (120-140 para cardio, 140-180 para HIIT)
+  - Playlists energéticas automáticas
+- [ ] **Party Mode** - Crossfade + shuffle + sin pausas
+  - Toggle: Off | On
+  - Crossfade automático (5s)
+  - Shuffle activado
+  - Sin silencios entre canciones
+- [ ] **One-Handed Mode** - UI compacta para uso con una mano
+  - Toggle: Off | On
+  - Reduce tamaño de UI
+  - Mueve controles al alcance del pulgar
+- [ ] **Car Mode** - UI simplificada para conducir
+  - Toggle: Off | On
+  - Botones más grandes
+  - Menos distracciones
+  - Solo controles esenciales
+- [ ] **Kids Mode** - Contenido explícito oculto
+  - Toggle: Off | On
+  - Filtra canciones con explicit tag
+  - UI simplificada
+- [ ] **Sound bath** - Frecuencias binaurales + sonidos relajantes
+  - Toggle: Off | On
+  - Modos: Focus, Relax, Sleep, Meditate
+- [ ] **Pomodoro Timer** - Música + timer de productividad
+  - Configurar: 25 min focus + 5 min break
+  - Música automática para cada modo
+
+### Configuración de Canción (v1.6.0)
+- [ ] **Capítulos mejorados** - UI para navegar capítulos (ID3/MP4)
+  - Lista de capítulos visible
+  - Skip a capítulo específico
+  - Mostrar títulos de capítulos
+- [ ] **ReplayGain mejorado** - Soporte para más formatos
+  - FLAC, OGG, M4A
+  - Auto-activar según formato
+
+---
+
 ## 📋 BACKLOG (Ideas para considerar)
 
 ### Funcionalidades Menores
 - [ ] Timer de inicio (despertar con música)
-- [ ] Crossfade entre canciones
-- [ ] Normalización de volumen (ya está ReplayGain)
 - [ ] Soporte para podcasts
-- [ ] Modo coche mejorado
-- [ ] Gestos personalizables en player
-- [ ] Temas personalizados (colores manuales)
+- [ ] Modo coche mejorado (ya en Opciones de Audio)
+- [ ] Temas personalizados (colores manuales) (ya en Player Skins)
 - [ ] Exportar biblioteca a CSV/JSON
 - [ ] Backup/restore de configuración
-- [ ] Modo fiesta (crossfade + shuffle)
+- [ ] Modo fiesta (ya en Party Mode)
 
 ### UI/UX
-- [ ] Animaciones de transición mejoradas
-- [ ] Gestos de deslizar en miniplayer
-- [ ] Vista de letras en pantalla de bloqueo
-- [ ] Widgets personalizables (tamaños adicionales)
+- [ ] Gestos de deslizar en miniplayer (ya en Gestos personalizables)
+- [ ] Vista de letras en pantalla de bloqueo (ya en Lock Screen)
+- [ ] Widgets personalizables (tamaños adicionales) (ya en Widgets)
 - [ ] Modo lectura (ocultar UI temporalmente)
 - [ ] Vista de cola mejorada (arrastrar para reorder)
 
 ### Performance
-- [ ] Lazy loading en listas grandes (1000+ items)
-- [ ] Cache de imágenes más agresivo
-- [ ] Precarga de siguiente canción
-- [ ] Reducir uso de memoria en background
-- [ ] Optimizar scanner para bibliotecas enormes
+- [ ] Lazy loading en listas grandes (ya en Performance)
+- [ ] Cache de imágenes más agresivo (ya en Performance)
+- [ ] Precarga de siguiente canción (excluido - no útil)
+- [ ] Reducir uso de memoria en background (ya en Performance)
+- [ ] Optimizar scanner para bibliotecas enormes (ya en Performance)
 
 ### Accesibilidad
 - [ ] Soporte completo para TalkBack
@@ -391,25 +589,67 @@
 - [ ] Alto contraste
 - [ ] Navegación por teclado (Android TV)
 
+### Audio (ya en Opciones de Audio)
+- [ ] Timer de inicio (despertar con música)
+- [ ] Crossfade (ya incluido)
+- [ ] Normalización de volumen (ya está ReplayGain)
+
 ---
 
 ## 🎯 PRIORIDADES 2026
 
-### Q1 2026 (Ene - Mar)
-1. ✅ **ListenBrainz Integration** - v1.3.0 (EN PROGRESO)
-2. 🔄 **Multi-artist Support** - v1.4.0 (PLANIFICADO)
+### Q1 2026 (Ene - Mar) ✅ COMPLETADO
+1. ✅ **ListenBrainz Integration** - v1.3.0 (COMPLETADO)
+2. ✅ **Multi-artist Support** - v1.4.0 (COMPLETADO)
 
-### Q2 2026 (Abr - Jun)
-1. 📋 **Improved Genre Handling** - v1.4.1
-2. 📋 **Enhanced Artist Pages** - v1.5.0
+### Q2 2026 (Abr - Jun) - "Experiencia Visual y Performance"
+**Versión:** v1.5.0
+1. 🎨 **Animaciones y Feedback** - Transiciones, haptic feedback, loading skeletons
+2. ⚡ **Inicio instantáneo** - Cold start < 500ms
+3. ⚡ **Cache multi-nivel** - 3 niveles (memoria, disco, DB)
+4. 🎯 **Smart Search** - Búsqueda fuzzy, por lyrics, humor, voz
+5. 🎨 **Player Skins** - 5-7 temas visuales adicionales
 
-### Q3 2026 (Jul - Sep)
-1. 🔮 **Jellyfin Integration** - v2.0.0-beta
-2. 📋 **Navidrome Integration** - v2.0.0
+**Versión:** v1.6.0
+1. 🎛️ **Opciones de Audio** - Speed, pitch, volume boost, modos especiales
+2. 🎨 **Gestos personalizables** - Swipe actions configurables
+3. 🎨 **Widgets interactivos** - Lyrics, stats, controles
+4. 🎨 **Lock Screen Lyrics** - Lyrics en pantalla de bloqueo
+5. ⚡ **Optimizaciones performance** - Lazy loading, cache, battery optimization
 
-### Q4 2026 (Oct - Dic)
-1. 📊 **Estadísticas Avanzadas** - v2.1.0
-2. 🎨 **Pulido general y bugs** - v2.1.x
+### Q3 2026 (Jul - Sep) - "Información y Descubrimiento"
+**Versión:** v1.7.0
+1. 📊 **Dashboard de estadísticas** - Music Insights (tiempo, rachas, top 50)
+2. 🔍 **Smart Radio** - Radio basada en canción/artista
+3. 🏆 **Logros/Gamificación** - Sistema de achievements
+4. 🔍 **Artistas similares** - Con % match
+
+**Versión:** v1.8.0
+1. 🔍 **Descubrimiento semanal** - Playlist automática cada lunes
+2. 🔍 **Tendencias personales** - Trending songs
+3. 🔍 **Porque escuchaste** - Explicación de recomendaciones
+4. 🎨 **Time Capsule** - Cápsula del tiempo musical
+
+### Q4 2026 (Oct - Dic) - "Descubrimiento Avanzado"
+**Versión:** v1.9.0
+1. 🔍 **Mood Playlists** - Playlists por estado de ánimo
+2. 🔍 **Explorar géneros** - Descubrimiento de nuevos géneros
+3. 🎨 **Fullscreen player inmersivo** - Player ocupa toda la pantalla
+4. 🎨 **Pulido general** - Bugs, mejoras menores
+
+---
+
+## 📅 ROADMAP RESUMEN POR VERSIÓN
+
+| Versión | Enfoque | Features Principales | Tiempo Est. |
+|---------|---------|---------------------|-------------|
+| **v1.4.0** | Multi-artist | ✅ Soporte múltiples artistas | ✅ COMPLETADO |
+| **v1.5.0** | UI/UX + Performance | Animaciones, Smart Search, Cache, Inicio rápido | 8-10 semanas |
+| **v1.6.0** | Audio + Widgets | Opciones de audio, Gestos, Widgets, Lock screen | 8-10 semanas |
+| **v1.7.0** | Estadísticas + Radio | Dashboard stats, Smart Radio, Logros | 10-12 semanas |
+| **v1.8.0** | Descubrimiento | Descubrimiento semanal, Time Capsule | 6-8 semanas |
+| **v1.9.0** | Mood + Pulido | Mood playlists, Explorar géneros, Fullscreen player | 6-8 semanas |
+| **v2.0.0** | Streaming | Jellyfin, Navidrome | 12-16 semanas |
 
 ---
 
