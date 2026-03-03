@@ -6,6 +6,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.graphics.Typeface
 import android.net.Uri
 import android.provider.OpenableColumns
+import android.util.Log
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +31,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import com.mardous.booming.core.model.lyrics.LyricsViewSettings.Mode as LyricsViewMode
+
+private const val TAG = "LyricsViewModel"
 
 /**
  * @author Christians M. A. (mardous)
@@ -145,7 +148,7 @@ class LyricsViewModel(
 
             emit(isValid && outFile.length() > 0)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Error downloading font", e)
             emit(false)
         }
     }

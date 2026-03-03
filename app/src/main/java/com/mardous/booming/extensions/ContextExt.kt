@@ -32,16 +32,26 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
+import android.util.Log
+import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.PluralsRes
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.shape.ShapeAppearanceModel
@@ -51,7 +61,11 @@ import com.mardous.booming.extensions.resources.getDrawableCompat
 import com.mardous.booming.extensions.resources.getTinted
 import com.mardous.booming.util.AutoDownloadMetadataPolicy
 import com.mardous.booming.util.Preferences
-import io.ktor.http.encodeURLParameter
+import kotlin.math.roundToInt
+
+private const val TAG = "ContextExt"
+
+fun String.encodeURLParameter(): String = java.net.URLEncoder.encode(this, "UTF-8")
 
 val Context.fileProviderAuthority: String
     get() = "$packageName.provider"
@@ -111,7 +125,7 @@ fun Context.webSearch(vararg keys: String?) {
             .putExtra(SearchManager.QUERY, query)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     ) {
-        openUrl("https://google.com/search?q=${query.encodeURLParameter(spaceToPlus = true)}")
+        openUrl("https://google.com/search?q=${query.encodeURLParameter()}")
     }
 }
 
@@ -180,7 +194,7 @@ fun Context.plurals(@PluralsRes resId: Int, quantity: Int): String {
     return try {
         resources.getQuantityString(resId, quantity, quantity)
     } catch (e: Resources.NotFoundException) {
-        e.printStackTrace()
+        Log.e(TAG, "Plurals not found: $resId", e)
         quantity.toString()
     }
 }

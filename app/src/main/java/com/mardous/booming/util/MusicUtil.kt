@@ -20,6 +20,7 @@ package com.mardous.booming.util
 import android.content.Context
 import android.provider.BaseColumns
 import android.provider.MediaStore
+import android.util.Log
 import androidx.core.net.toUri
 import com.mardous.booming.data.local.repository.Repository
 import com.mardous.booming.data.model.Song
@@ -28,6 +29,8 @@ import com.mardous.booming.extensions.hasQ
 import com.mardous.booming.extensions.onUI
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+
+private const val TAG = "MusicUtil"
 
 typealias ProgressCallback = (song: Song, progress: Int, total: Int) -> Unit
 typealias CompletionCallback = (deleted: Int) -> Unit
@@ -113,7 +116,7 @@ object MusicUtil : KoinComponent {
                     }
                 }
             } catch (e: SecurityException) {
-                e.printStackTrace()
+                Log.e(TAG, "Error deleting files", e)
             }
         }
 

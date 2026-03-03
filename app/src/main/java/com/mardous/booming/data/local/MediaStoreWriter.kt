@@ -23,11 +23,14 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import com.mardous.booming.extensions.hasQ
 import com.mardous.booming.util.FileUtil.PLAYLISTS_DIRECTORY_NAME
 import java.io.File
 import java.io.IOException
 import java.io.OutputStream
+
+private const val TAG = "MediaStoreWriter"
 
 /**
  * @author Christians M. A. (mardous)
@@ -116,9 +119,9 @@ class MediaStoreWriter(private val context: Context, private val contentResolver
                 }
             }
         } catch (e: IOException) {
-            e.printStackTrace()
+            Log.e(TAG, "IOException writing to MediaStore", e)
         } catch (e: SecurityException) {
-            e.printStackTrace()
+            Log.e(TAG, "SecurityException writing to MediaStore", e)
         }
         return Result(Result.Code.ERROR)
     }

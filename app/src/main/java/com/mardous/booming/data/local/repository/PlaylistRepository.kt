@@ -41,6 +41,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
+private const val TAG = "PlaylistRepository"
+
 interface PlaylistRepository {
     fun devicePlaylists(): List<Playlist>
     fun devicePlaylist(playlistId: Long): Playlist
@@ -288,7 +290,7 @@ class RealPlaylistRepository(
                 newSelection, selectionArguments, "${MediaStore.Audio.Playlists.NAME} ASC"
             )
         } catch (e: SecurityException) {
-            e.printStackTrace()
+            Log.e(TAG, "SecurityException querying playlists", e)
         }
         return null
     }

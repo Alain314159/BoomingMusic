@@ -41,7 +41,7 @@ interface ArtistRepository {
     fun albumArtist(artistName: String): Artist
     fun albumArtists(query: String): List<Artist>
     fun similarAlbumArtists(artist: Artist): List<Artist>
-    
+
     // Multi-artist support methods
     suspend fun artistByName(artistName: String): Artist?
     suspend fun getSongsForArtist(artistName: String): List<Song>
@@ -59,10 +59,11 @@ class RealArtistRepository(
         get() = Preferences.ignoreSingles
 
     override fun artists(): List<Artist> {
-        // Use song_artist table for better multi-artist support
-        val allArtistNames = runBlocking { songArtistDao.getAllArtistsFlow().first() }
+        val allArtistNames = runBlocking {
+            songArtistDao.getAllArtistsFlow().first { it.isNotEmpty() }
+        }
         val minimumSongCount = Preferences.minimumSongCountForArtist
-        
+
         val artists = allArtistNames.mapNotNull { artistName ->
             val songs = runBlocking { getSongsForArtist(artistName) }
             if (songs.size >= minimumSongCount) {
@@ -109,10 +110,11 @@ class RealArtistRepository(
     }
 
     override fun artists(query: String): List<Artist> {
-        // Use song_artist table for search
-        val allArtistNames = runBlocking { songArtistDao.getAllArtistsFlow().first() }
+        val allArtistNames = runBlocking {
+            songArtistDao.getAllArtistsFlow().first { it.isNotEmpty() }
+        }
         val matchingArtists = allArtistNames.filter { it.contains(query, ignoreCase = true) }
-        
+
         val artists = matchingArtists.mapNotNull { artistName ->
             val songs = runBlocking { getSongsForArtist(artistName) }
             if (songs.isNotEmpty()) {

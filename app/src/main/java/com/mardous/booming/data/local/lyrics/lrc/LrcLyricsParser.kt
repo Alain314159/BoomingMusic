@@ -8,6 +8,8 @@ import com.mardous.booming.data.model.lyrics.LyricsFile
 import java.io.Reader
 import java.util.Locale
 
+private const val TAG = "LrcLyricsParser"
+
 class LrcLyricsParser : LyricsParser {
 
     override fun handles(file: LyricsFile): Boolean {
@@ -84,7 +86,7 @@ class LrcLyricsParser : LyricsParser {
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Error parsing LRC lyrics", e)
         }
         return parse(attributes, rawLines, trackLength)
     }
@@ -194,7 +196,7 @@ class LrcLyricsParser : LyricsParser {
                 offset = attributes["offset"]?.toLongOrNull() ?: 0
             )
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Error parsing LRC lyrics", e)
         }
         return null
     }

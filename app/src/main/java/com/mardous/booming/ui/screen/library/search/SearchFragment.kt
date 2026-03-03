@@ -23,6 +23,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
+import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.TextView
@@ -60,6 +61,8 @@ import kotlinx.coroutines.flow.collectLatest
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
+
+private const val TAG = "SearchFragment"
 
 /**
  * @author Christians M. A. (mardous)
@@ -315,7 +318,7 @@ class SearchFragment : AbsMainActivityFragment(R.layout.fragment_search),
         try {
             voiceSearchLauncher.launch(intent)
         } catch (e: ActivityNotFoundException) {
-            e.printStackTrace()
+            Log.e(TAG, "Voice search not available", e)
             showToast(R.string.speech_not_supported)
         }
     }

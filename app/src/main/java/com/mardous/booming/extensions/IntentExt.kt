@@ -19,11 +19,14 @@ package com.mardous.booming.extensions
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.app.ShareCompat
 import androidx.core.net.toUri
 import com.mardous.booming.R
 import com.mardous.booming.data.model.Song
 import com.mardous.booming.extensions.media.displayArtistName
+
+private const val TAG = "IntentExt"
 
 const val MIME_TYPE_AUDIO = "audio/*"
 const val MIME_TYPE_IMAGE = "image/*"
@@ -55,7 +58,7 @@ fun Context.getShareSongIntent(song: Song): Intent {
             .setChooserTitle(R.string.action_share)
             .createChooserIntent()
     } catch (e: IllegalArgumentException) {
-        e.printStackTrace()
+        Log.e(TAG, "Failed to share song: ${song.title}", e)
         showToast("Could not share this file.")
         Intent()
     }

@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
+private const val TAG = "ListenBrainzScrobble"
+
 /**
  * Servicio para gestionar scrobbles a ListenBrainz
  *
@@ -152,12 +154,12 @@ class ListenBrainzScrobbleService(
      */
     suspend fun updateNowPlaying(scrobble: ListenBrainzScrobble) {
         val token = getUserToken() ?: return
-        
+
         try {
             api.updateNowPlaying(token, scrobble)
         } catch (e: Exception) {
             // Now playing no es crítico, solo loguear
-            e.printStackTrace()
+            Log.e(TAG, "Failed to update now playing", e)
         }
     }
     
