@@ -423,9 +423,22 @@ open class PreferenceScreenFragment : PreferenceFragmentCompat(),
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         val settingsScreen = preference.key.toEnum<SettingsScreen>()
         return when {
+            // If preference has an intent, let it handle the click (e.g., launch Activity)
+            preference.intent != null -> {
+                super.onPreferenceTreeClick(preference)
+            }
             settingsScreen != null -> {
-                findNavController().navigate(settingsScreen.navAction)
-                true
+                // Check if the action is valid from the current destination
+                val currentDestination = findNavController().currentDestination
+                val actionExists = currentDestination?.getAction(settingsScreen.navAction) != null
+
+                if (actionExists) {
+                    findNavController().navigate(settingsScreen.navAction)
+                    true
+                } else {
+                    // Let the preference handle the click (e.g., launch intent)
+                    super.onPreferenceTreeClick(preference)
+                }
             }
             preference.key == "about" -> {
                 findActivityNavController(R.id.fragment_container).navigate(R.id.nav_about)
