@@ -20,6 +20,7 @@ package com.mardous.booming.data.scanner
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -124,7 +125,7 @@ class MediaScannerManager(
 
         val audioFiles = if (folder.uri != null) {
             // Carpeta SAF
-            val uri = Uri.parse(folder.uri)
+            val uri = folder.uri.toUri()
             fileScanner.scanDocumentDirectory(uri) { current, total, name ->
                 _scanState.value = ScanState.Progress(current, total, name)
             }

@@ -23,6 +23,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.core.content.withStyledAttributes
 import com.google.android.material.button.MaterialButton
 import com.mardous.booming.R
 
@@ -42,14 +43,14 @@ class PermissionView(context: Context, attrs: AttributeSet? = null) : FrameLayou
     private var mGranted: Boolean = false
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.PermissionView)
-        mTitle = a.getString(R.styleable.PermissionView_permissionTitle)
-        mDescription = a.getString(R.styleable.PermissionView_permissionDescription)
-        mButtonIcon = a.getDrawable(R.styleable.PermissionView_buttonIcon)
-        mButtonText = a.getString(R.styleable.PermissionView_buttonText)
-        mNumber = a.getInteger(R.styleable.PermissionView_number, mNumber)
-        mGranted = a.getBoolean(R.styleable.PermissionView_granted, mGranted)
-        a.recycle()
+        context.withStyledAttributes(attrs, R.styleable.PermissionView) {
+            mTitle = getString(R.styleable.PermissionView_permissionTitle)
+            mDescription = getString(R.styleable.PermissionView_permissionDescription)
+            mButtonIcon = getDrawable(R.styleable.PermissionView_buttonIcon)
+            mButtonText = getString(R.styleable.PermissionView_buttonText)
+            mNumber = getInteger(R.styleable.PermissionView_number, mNumber)
+            mGranted = getBoolean(R.styleable.PermissionView_granted, mGranted)
+        }
 
         val contentView = View.inflate(getContext(), R.layout.permission_view, null)
         mNumberView = contentView.findViewById(R.id.number)

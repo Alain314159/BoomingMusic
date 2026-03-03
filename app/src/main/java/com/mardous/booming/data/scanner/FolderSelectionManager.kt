@@ -21,6 +21,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Environment
+import androidx.core.net.toUri
+import androidx.core.content.edit
 import androidx.documentfile.provider.DocumentFile
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -80,7 +82,7 @@ class FolderSelectionManager : KoinComponent {
         getUserSelectedFolders().forEach { folderData ->
             try {
                 val (uriString, displayName) = folderData.split("||")
-                val uri = Uri.parse(uriString)
+                val uri = uriString.toUri()
                 val documentFile = DocumentFile.fromTreeUri(context, uri)
                 if (documentFile != null && documentFile.exists()) {
                     folders.add(ScanFolder(
@@ -111,9 +113,9 @@ class FolderSelectionManager : KoinComponent {
         
         if (!currentFolders.any { it.startsWith(uriString) }) {
             currentFolders.add(folderData)
-            prefs.edit()
-                .putStringSet(KEY_USER_FOLDERS, currentFolders.toSet())
-                .apply()
+            prefs.edit {
+                    putStringSet(KEY_USER_FOLDERS, currentFolders.toSet())
+                }
         }
     }
 
@@ -129,16 +131,16 @@ class FolderSelectionManager : KoinComponent {
             .apply()
         
         // También remover preferencia de enabled
-        prefs.edit().remove("${KEY_ENABLED_PREFIX}_$uriString").apply()
+        prefs.edit {remove("${KEY_ENABLED_PREFIX}_$uriString")}
     }
 
     /**
      * Habilita/deshabilita una carpeta específica
      */
     fun setFolderEnabled(pathOrUri: String, enabled: Boolean) {
-        prefs.edit()
-            .putBoolean("${KEY_ENABLED_PREFIX}_$pathOrUri", enabled)
-            .apply()
+        prefs.edit {
+                putBoolean("${KEY_ENABLED_PREFIX}_$pathOrUri", enabled)
+            }
     }
 
     /**
@@ -186,9 +188,9 @@ class FolderSelectionManager : KoinComponent {
         val index = currentFolders.indexOfFirst { it.startsWith(uriString) }
         if (index != -1) {
             currentFolders[index] = "$uriString||$newDisplayName"
-            prefs.edit()
-                .putStringSet(KEY_USER_FOLDERS, currentFolders.toSet())
-                .apply()
+            prefs.edit {
+                    putStringSet(KEY_USER_FOLDERS, currentFolders.toSet())
+                }
         }
     }
 
@@ -204,7 +206,7 @@ class FolderSelectionManager : KoinComponent {
         prefs.all.keys
             .filter { it.startsWith(KEY_ENABLED_PREFIX) }
             .forEach { key ->
-                prefs.edit().remove(key).apply()
+                prefs.edit {remove(key)}
             }
     }
 }

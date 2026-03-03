@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mardous.booming.data.remote.listenbrainz.service.AuthState
 import org.koin.androidx.compose.koinViewModel
@@ -61,7 +62,7 @@ fun ListenBrainzSettingsScreen(
                             val username = (uiState as AuthState.LoggedIn).username
                             val url = "https://listenbrainz.org/user/$username"
                             val customTabsIntent = CustomTabsIntent.Builder().build()
-                            customTabsIntent.launchUrl(context, Uri.parse(url))
+                            customTabsIntent.launchUrl(context, url.toUri())
                         }
                     }) {
                         Icon(Icons.Default.OpenInNew, contentDescription = "View Profile")
@@ -85,7 +86,7 @@ fun ListenBrainzSettingsScreen(
                             val customTabsIntent = CustomTabsIntent.Builder().build()
                             customTabsIntent.launchUrl(
                                 context,
-                                Uri.parse("https://listenbrainz.org/settings")
+                                "https://listenbrainz.org/settings".toUri()
                             )
                         }
                     )

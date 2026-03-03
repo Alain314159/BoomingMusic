@@ -26,6 +26,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -281,7 +282,7 @@ class FolderSelectionActivity : AbsThemeActivity() {
                     .setMessage(getString(R.string.remove_folder_confirm, folder.displayName))
                     .setPositiveButton(R.string.remove) { _, _ ->
                         folder.uri?.let { uriString ->
-                            val uri = Uri.parse(uriString)
+                            val uri = uriString.toUri()
                             folderManager.removeUserSelectedFolder(uri)
                             loadFolders()
                             showToast(getString(R.string.folder_removed))

@@ -26,6 +26,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.Settings
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -108,7 +109,7 @@ class PermissionManager : KoinComponent {
         safFolders.forEach { folderData ->
             try {
                 val uriString = folderData.split("||").firstOrNull() ?: folderData
-                val uri = Uri.parse(uriString)
+                val uri = uriString.toUri()
                 val documentFile = androidx.documentfile.provider.DocumentFile.fromTreeUri(context, uri)
                 if (documentFile != null && documentFile.canRead()) {
                     return true
@@ -154,7 +155,7 @@ class PermissionManager : KoinComponent {
     fun createManageAllAccessIntent(): Intent? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
-                data = Uri.parse("package:${context.packageName}")
+                data = "package:${context.packageName}".toUri()
             }
         } else {
             null

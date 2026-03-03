@@ -20,6 +20,7 @@ package com.mardous.booming.data.scanner
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import com.mardous.booming.data.local.MetadataReader
 import com.mardous.booming.util.FileUtil
@@ -227,7 +228,7 @@ class FileScanner : KoinComponent {
             AudioFileInfo(
                 uri = uri,
                 filePath = filePath,
-                fileName = Uri.parse(filePath).lastPathSegment ?: "Unknown",
+                fileName = filePath.toUri().lastPathSegment ?: "Unknown",
                 size = fileSize,
                 lastModified = fileLastModified,
                 title = title,

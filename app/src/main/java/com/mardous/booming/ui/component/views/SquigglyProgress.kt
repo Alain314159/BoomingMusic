@@ -24,6 +24,7 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.os.SystemClock
 import androidx.annotation.VisibleForTesting
+import androidx.core.graphics.withClip
 import com.mardous.booming.extensions.resources.withAlpha
 
 private const val TWO_PI = (Math.PI * 2f).toFloat()
@@ -198,10 +199,9 @@ class SquigglyProgress : Drawable() {
         if (transitionEnabled) {
             // If there's a smooth transition, we draw the rest of the
             // path in a different color (using different clip params)
-            canvas.save()
-            canvas.clipRect(totalProgressPx, -1f * clipTop, bounds.width().toFloat(), clipTop)
-            canvas.drawPath(path, linePaint)
-            canvas.restore()
+            canvas.withClip(totalProgressPx, -1f * clipTop, bounds.width().toFloat(), clipTop) {
+                drawPath(path, linePaint)
+            }
         } else {
             // No transition, just draw a flat line to the end of the region.
             // The discontinuity is hidden by the progress bar thumb shape.
