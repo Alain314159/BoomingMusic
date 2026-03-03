@@ -206,31 +206,34 @@ class App : Application(), SingletonImageLoader.Factory {
 
     private fun enableStrictMode() {
         val executor = java.util.concurrent.Executors.newSingleThreadExecutor()
-        
+
+        // VM Policy - REMOVED penaltyLog() to prevent recursive logging
+        // (logging violations causes more violations to be logged)
         val vmPolicy = VmPolicy.Builder()
             .detectAll()
-            .penaltyLog()
+            // .penaltyLog()  // REMOVED: Causes recursive violations with Timber
             .penaltyListener(executor) { violation ->
                 val message = "VM Policy violation: ${violation.javaClass.simpleName}"
-                Timber.e(message)
-                DebugLogger.logStrictModeViolation("VM", message)
+                // Only log to file, not logcat (avoids recursion)
+                DebugLogger.logStrictModeViolation("VM", message, violation)
             }
             .build()
         StrictMode.setVmPolicy(vmPolicy)
 
+        // Thread Policy - REMOVED penaltyLog() to prevent recursive logging
         val threadPolicy = ThreadPolicy.Builder()
             .detectAll()
-            .penaltyLog()
-            .penaltyFlashScreen()
+            // .penaltyLog()  // REMOVED: Causes recursive violations with Timber
+            .penaltyFlashScreen()  // Keep visual feedback for debug
             .penaltyListener(executor) { violation ->
                 val message = "Thread Policy violation: ${violation.javaClass.simpleName}"
-                Timber.e(message)
-                DebugLogger.logStrictModeViolation("Thread", message)
+                // Only log to file, not logcat (avoids recursion)
+                DebugLogger.logStrictModeViolation("Thread", message, violation)
             }
             .build()
         StrictMode.setThreadPolicy(threadPolicy)
 
-        Timber.d("StrictMode enabled with logging")
+        Timber.d("StrictMode enabled (no penaltyLog to avoid recursion)")
     }
 
     override fun onTerminate() {

@@ -117,7 +117,8 @@
         <activity
             android:name=".ui.screen.settings.listenbrainz.ListenBrainzSettingsActivity"
             android:exported="false"
-            android:label="ListenBrainz" />
+            android:label="ListenBrainz"
+            android:theme="@style/Theme.Booming.FollowSystem" />
 
         <!-- In order not to break compatibility with icon-packs -->
         <activity-alias
