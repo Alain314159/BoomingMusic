@@ -34,7 +34,7 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 
 // Traffic tag for network calls (prevents UntaggedSocketViolation in StrictMode)
-private const val TRAFFIC_STATS_TAG = 0xA0000000
+private const val TRAFFIC_STATS_TAG = 0xA0000000.toInt()
 
 private fun provideDefaultCache(context: Context): Cache? {
     val cacheDir = File(context.cacheDir.absolutePath, "/okhttp-cache/")
@@ -66,7 +66,7 @@ fun provideOkHttp(context: Context): OkHttpClient {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         TrafficStats.setThreadStatsTag(TRAFFIC_STATS_TAG)
     }
-    
+
     return OkHttpClient.Builder()
         .addInterceptor(headerInterceptor(context))
         .connectTimeout(5, TimeUnit.SECONDS)
