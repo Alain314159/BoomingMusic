@@ -595,45 +595,129 @@
 
 ---
 
-## 📋 BACKLOG (Ideas para considerar)
+## 📋 BACKLOG LIMPIADO
 
-### Funcionalidades Menores
-- [ ] Timer de inicio (despertar con música)
-- [ ] Soporte para podcasts
-- [ ] Modo coche mejorado (ya en Opciones de Audio)
-- [ ] Temas personalizados (colores manuales) (ya en Player Skins)
-- [ ] Exportar biblioteca a CSV/JSON
-- [ ] Backup/restore de configuración
-- [ ] Modo fiesta (ya en Party Mode)
+> **Nota:** Este backlog contiene SOLO las 4 categorías principales (UI/UX, Descubrimiento, Performance, Audio).
+> Las demás sugerencias fueron eliminadas o movidas a "Features Salvadas".
 
-### UI/UX
-- [ ] Gestos de deslizar en miniplayer (ya en Gestos personalizables)
-- [ ] Vista de letras en pantalla de bloqueo (ya en Lock Screen)
-- [ ] Widgets personalizables (tamaños adicionales) (ya en Widgets)
-- [ ] Modo lectura (ocultar UI temporalmente)
-- [ ] Vista de cola mejorada (arrastrar para reorder)
+### UI/UX - Por implementar
+- [ ] **Animaciones de transición** - Fade/scale al cambiar canción (200-300ms)
+- [ ] **MiniPlayer → Full Player animado** - Shared element transition
+- [ ] **Like button con animación** - Heart burst particles
+- [ ] **Shuffle/Repeat con rotate** - Icono rota 360°
+- [ ] **Lyrics scroll suave** - Smooth scroll con highlight animado
+- [ ] **Loading skeletons** - En vez de spinners
+- [ ] **Ripple effect mejorado** - Ondas más visibles
+- [ ] **Page transitions** - Slide + fade entre pantallas
+- [ ] **Haptic feedback** - Vibración sutil en botones
+- [ ] **Player Skins** - 5-7 temas visuales adicionales
+- [ ] **Gestos personalizables** - Configurar swipe actions
+- [ ] **Fullscreen player inmersivo** - Player ocupa toda la pantalla
+- [ ] **Dashboard de estadísticas** - Music Insights
+- [ ] **Logros/Gamificación** - Sistema de achievements
+- [ ] **Smart Search** - Búsqueda fuzzy, por lyrics, humor, voz
+- [ ] **Now Playing en lock screen** - Lyrics en pantalla de bloqueo
+- [ ] **Widgets interactivos** - Lyrics, stats, controles
+- [ ] **Time Capsule** - Cápsula del tiempo musical
 
-### Performance
-- [ ] Lazy loading en listas grandes (ya en Performance)
-- [ ] Cache de imágenes más agresivo (ya en Performance)
-- [ ] Precarga de siguiente canción (excluido - no útil)
-- [ ] Reducir uso de memoria en background (ya en Performance)
-- [ ] Optimizar scanner para bibliotecas enormes (ya en Performance)
+### Descubrimiento - Por implementar
+- [ ] **Smart Radio** - Radio basada en canción/artista
+- [ ] **Artistas similares** - Con % match
+- [ ] **Descubrimiento semanal** - Playlist automática cada lunes
+- [ ] **Tendencias personales** - Trending songs
+- [ ] **Porque escuchaste** - Explicación de recomendaciones
+- [ ] **Match percentage** - % de similitud
+- [ ] **Explorar géneros** - "Nunca escuchaste Salsa, prueba..."
+- [ ] **Mood Playlists** - Playlists por estado de ánimo
 
-### Accesibilidad
-- [ ] Soporte completo para TalkBack
-- [ ] Textos más grandes (dynamic type)
-- [ ] Alto contraste
-- [ ] Navegación por teclado (Android TV)
+### Performance - Por implementar
+- [ ] **Inicio instantáneo** - Cold start < 500ms
+- [ ] **Cache multi-nivel** - 3 niveles (memoria, disco, DB)
+- [ ] **Lazy loading en listas** - Carga de 100 en 100
+- [ ] **Imagen cache agresivo** - Cache de 500MB
+- [ ] **Background worker optimizado** - Scanner solo con datos
+- [ ] **Memory management** - Liberar memoria en background
+- [ ] **Database índices optimizados** - Índices en songs, artists, albums
+- [ ] **Build times -50%** - Koin modules separados, KSP cache
+- [ ] **Reduce APK size** - WebP en vez de PNG
+- [ ] **Battery optimization** - Menos wake locks
+- [ ] **Network retry inteligente** - Reintentar solo con WiFi
 
-### Audio (ya en Opciones de Audio)
-- [ ] Timer de inicio (despertar con música)
-- [ ] Crossfade (ya incluido)
-- [ ] Normalización de volumen (ya está ReplayGain)
+### Audio (Settings → Audio) - Por implementar
+- [ ] **Speed control** - 0.5x - 2x
+- [ ] **Pitch shift** - -2 a +2 semitonos
+- [ ] **Volume boost** - +3dB, +6dB, +9dB
+- [ ] **Bass boost** - 0% - 100%
+- [ ] **Virtualizer** - Sonido surround 3D
+- [ ] **Fade in/out** - 3s, 5s, 10s
+- [ ] **Crossfade** - 3s, 5s, 8s, 10s
+- [ ] **Mono audio** - Toggle
+- [ ] **Audio balance** - L/R slider
+- [ ] **Study Mode** - Música sin lyrics
+- [ ] **Workout Mode** - BPM matching
+- [ ] **Party Mode** - Crossfade + shuffle
+- [ ] **One-Handed Mode** - UI compacta
+- [ ] **Car Mode** - UI simplificada
+- [ ] **Kids Mode** - Contenido explícito oculto
+- [ ] **Sound bath** - Frecuencias binaurales
+- [ ] **Pomodoro Timer** - 25 min focus + 5 min break
+- [ ] **Capítulos mejorados** - UI para navegar capítulos
+- [ ] **ReplayGain mejorado** - Soporte FLAC, OGG, M4A
 
 ---
 
-## 🎯 PRIORIDADES 2026
+## 💎 19 FEATURES SALVADAS "SUPER GENIALES"
+
+> **Nota:** Estas features NO son de las 4 categorías principales, pero son demasiado buenas para eliminarlas.
+> Se implementarán como "features sorpresa" en versiones futuras.
+
+### 🎤 Karaoke & Grabación (v2.1.0)
+1. **Karaoke Mode** - Reduce vocal para cantar encima (phase cancellation)
+2. **Eco/Reverb para mic** - Agregar efectos si cantas con micrófono USB/BT
+3. **Grabación de duetos** - Grabar dúos con amigos remotamente
+4. **Scoring de karaoke** - Puntuación en tiempo real según pitch y timing
+
+### 🎵 Social & Compartir (v2.2.0)
+5. **Share Card** - Generar imagen con canción + lyrics para Instagram/Twitter
+6. **Music Messages** - Enviar canción + mensaje a amigos
+7. **Listening Party** - Escuchar álbum nuevo con amigos (sync remoto)
+8. **Taste Match** - % de compatibilidad musical con amigos
+
+### 🎮 Gamificación Avanzada (v2.3.0)
+9. **Music Bingo** - Bingo con canciones/artistas
+10. **Blind Test** - Adivina la canción (juego)
+11. **Scavenger Hunt** - Búsqueda del tesoro musical
+12. **Music Trivia** - Quiz sobre tus artistas favoritos
+
+### 🌍 Exploración Musical (v2.4.0)
+13. **Music Map** - Mapa mundial de géneros por región
+14. **World Tour** - "Escucha música de 20 países" (challenge)
+15. **Decade Explorer** - "Escucha una canción de cada década"
+16. **Sample Finder** - Canciones que samplean otras
+
+### 🎨 Experiencias Inmersivas (v2.5.0)
+17. **Concert Setlists** - Setlists de conciertos de tus artistas
+18. **Behind The Song** - Historia detrás de la canción
+19. **Music Videos** - Links a videos oficiales sincronizados
+
+---
+
+## 🗑️ ELIMINADAS (No encajan en la visión)
+
+Las siguientes fueron eliminadas permanentemente:
+- Timer de inicio (despertar con música) - Muy específico
+- Soporte para podcasts - No es un reproductor de podcasts
+- Exportar biblioteca a CSV/JSON - Muy nicho
+- Backup/restore de configuración - Ya existe backup de Android
+- Modo lectura - Muy específico
+- Vista de cola mejorada - Ya es funcional
+- Precarga de siguiente canción - No útil según análisis
+- Timer de inicio (despertar) - Duplicado
+- Normalización de volumen - Ya está ReplayGain
+
+---
+
+## 🎯 PRIORIDADES 2026 ACTUALIZADAS
 
 ### Q1 2026 (Ene - Mar) ✅ COMPLETADO
 1. ✅ **ListenBrainz Integration** - v1.3.0 (COMPLETADO)
