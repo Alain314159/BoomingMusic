@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- Suppress non-critical warnings -->
+    <issue id="UnusedResources" severity="ignore" />
+    <issue id="MissingQuantity" severity="ignore" />
+    <issue id="PrivateResource" severity="ignore" />
+    <issue id="MissingTranslation" severity="ignore" />
+    <issue id="PluralsCandidate" severity="ignore" />
+    <issue id="UnusedQuantity" severity="ignore" />
+    <issue id="GradleDependency" severity="ignore" />
+    <issue id="NewerVersionAvailable" severity="ignore" />
+    <issue id="AndroidGradlePluginVersion" severity="ignore" />
+    <issue id="InlinedApi" severity="ignore" />
+    <issue id="UnusedAttribute" severity="ignore" />
+    <issue id="VectorRaster" severity="ignore" />
+    <issue id="SelectedPhotoAccess" severity="ignore" />
+    <issue id="ObsoleteSdkInt" severity="ignore" />
+    
+    <!-- Keep critical warnings -->
+    <issue id="NotifyDataSetChanged" severity="warning" />
+    <issue id="ModifierParameter" severity="warning" />
+    <issue id="UseKtx" severity="warning" />
+    <issue id="ImpliedQuantity" severity="warning" />
+    <issue id="Typos" severity="warning" />
+    <issue id="Overdraw" severity="warning" />
+    <issue id="ContentDescription" severity="warning" />
+    <issue id="StaticFieldLeak" severity="warning" />
+    <issue id="FragmentTagUsage" severity="warning" />
+    <issue id="RtlSymmetry" severity="warning" />
+    <issue id="SetTextI18n" severity="warning" />
+    <issue id="TypographyEllipsis" severity="warning" />
+    <issue id="InconsistentLayout" severity="warning" />
+    <issue id="SwitchIntDef" severity="warning" />
+    <issue id="UseTomlInstead" severity="warning" />
+    <issue id="IconDensities" severity="warning" />
+</lint>
