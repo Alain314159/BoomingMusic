@@ -488,6 +488,8 @@
 
 ## 🎛️ OPCIONES DE AUDIO (Settings → Audio) (v1.6.0)
 
+> **Nota:** TODAS estas opciones van en **Settings → Audio**. No en el menú del player.
+
 > **Nota:** Estas opciones van en el menú de 3 puntitos del player → "Opciones de audio" o en Settings → Audio
 
 ### Procesamiento de Audio (v1.6.0)
@@ -555,6 +557,41 @@
 - [ ] **ReplayGain mejorado** - Soporte para más formatos
   - FLAC, OGG, M4A
   - Auto-activar según formato
+
+---
+
+## 🔘 MENÚ DE 3 PUNTICOS (Player Options) (v1.5.0 - v1.8.0)
+
+> **Nota:** Estas funciones se acceden desde el **menú de 3 punticos** del player (⋮)
+
+### Funciones Existentes (mover aquí) (v1.5.0)
+- [ ] **Sleep timer** - (ya existe)
+- [ ] **Add to playlist** - (ya existe)
+- [ ] **Add to queue** - (ya existe)
+- [ ] **Go to artist** - (ya existe)
+- [ ] **Go to album** - (ya existe)
+- [ ] **Share song** - (ya existe)
+- [ ] **Set as ringtone** - (ya existe)
+- [ ] **Edit Tags** - (ya existe)
+- [ ] **Open in folder** - (ya existe)
+- [ ] **Add to Favorites** - (ya existe)
+- [ ] **Remove from History** - (ya existe)
+
+### Nuevas Funciones (v1.6.0 - v1.8.0)
+- [ ] **Time Capsule** - Crear cápsula del tiempo con esta canción
+  - "Guardar en cápsula del tiempo"
+  - "Programar desbloqueo"
+- [ ] **Start Radio** - Iniciar radio basada en esta canción
+  - "Crear radio de [canción]"
+- [ ] **Similar Songs** - Ver canciones similares
+  - "Mostrar 20 canciones similares"
+- [ ] **View Statistics** - Ver estadísticas de esta canción
+  - "Veces reproducida: X"
+  - "Última vez: [fecha]"
+  - "Tiempo total: X horas"
+- [ ] **View Lyrics** - (acceso directo a lyrics)
+- [ ] **Song Info** - Información detallada de la canción
+  - Formato, bitrate, sample rate, tamaño
 
 ---
 
