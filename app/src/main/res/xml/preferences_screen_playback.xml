@@ -120,6 +120,15 @@
         app:layout="@layout/preference_category_title">
 
         <SwitchPreferenceCompat
+            app:icon="@drawable/ic_vibration_24dp"
+            app:title="Haptic Feedback"
+            app:summary="Vibrate on button presses and playback controls"
+            app:defaultValue="true"
+            app:layout="@layout/list_item_view"
+            app:widgetLayout="@layout/preference_switch"
+            app:key="haptic_feedback"/>
+
+        <SwitchPreferenceCompat
             app:iconSpaceReserved="true"
             app:title="@string/rewind_with_back_title"
             app:summary="@string/rewind_with_back_summary"
