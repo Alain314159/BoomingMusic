@@ -18,6 +18,8 @@
 package com.mardous.booming.data.remote
 
 import android.content.Context
+import android.net.TrafficStats
+import android.os.Build
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.compression.ContentEncoding
@@ -31,6 +33,9 @@ import okhttp3.OkHttpClient
 import java.io.File
 import java.util.concurrent.TimeUnit
 
+// Traffic tag for network calls (prevents UntaggedSocketViolation in StrictMode)
+private const val TRAFFIC_STATS_TAG = 0xA0000000
+
 private fun provideDefaultCache(context: Context): Cache? {
     val cacheDir = File(context.cacheDir.absolutePath, "/okhttp-cache/")
     if (cacheDir.mkdirs() || cacheDir.isDirectory) {
@@ -40,18 +45,28 @@ private fun provideDefaultCache(context: Context): Cache? {
 }
 
 private fun headerInterceptor(context: Context): Interceptor {
-    return Interceptor {
-        val original = it.request()
+    return Interceptor { chain ->
+        // Set traffic stats tag to prevent UntaggedSocketViolation
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            TrafficStats.setThreadStatsTag(TRAFFIC_STATS_TAG)
+        }
+        
+        val original = chain.request()
         val request = original.newBuilder()
             .header("User-Agent", context.packageName)
             .addHeader("Content-Type", "application/json; charset=utf-8")
             .method(original.method, original.body)
             .build()
-        it.proceed(request)
+        chain.proceed(request)
     }
 }
 
 fun provideOkHttp(context: Context): OkHttpClient {
+    // Set traffic stats tag for OkHttp initialization
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        TrafficStats.setThreadStatsTag(TRAFFIC_STATS_TAG)
+    }
+    
     return OkHttpClient.Builder()
         .addInterceptor(headerInterceptor(context))
         .connectTimeout(5, TimeUnit.SECONDS)
