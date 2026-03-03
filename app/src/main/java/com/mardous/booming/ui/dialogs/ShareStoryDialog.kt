@@ -17,6 +17,7 @@
 
 package com.mardous.booming.ui.dialogs
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -51,7 +52,11 @@ class ShareStoryDialog : DialogFragment() {
     private val mediaStoreWriter: MediaStoreWriter by inject()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val song = BundleCompat.getParcelable(requireArguments(), EXTRA_SONG, Song::class.java)!!
+        val song = BundleCompat.getParcelable(requireArguments(), EXTRA_SONG, Song::class.java)
+            ?: return MaterialAlertDialogBuilder(requireContext())
+                .setMessage(R.string.an_unexpected_error_occurred)
+                .setPositiveButton(android.R.string.ok, null)
+                .create()
         _binding = DialogShareToStoriesBinding.inflate(layoutInflater)
         binding.songTitle.text = song.title
         if (song.isArtistNameUnknown()) {

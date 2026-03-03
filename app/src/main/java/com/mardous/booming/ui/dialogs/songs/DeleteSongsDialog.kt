@@ -18,6 +18,7 @@
 package com.mardous.booming.ui.dialogs.songs
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Dialog
 import android.app.PendingIntent
 import android.content.DialogInterface
@@ -77,9 +78,15 @@ class DeleteSongsDialog : DialogFragment(), SAFDialog.SAFResultListener {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        songs = BundleCompat.getParcelableArrayList(requireArguments(), EXTRA_SONGS, Song::class.java)!!
-            .distinct()
-            .toMutableList()
+        songs = BundleCompat.getParcelableArrayList(requireArguments(), EXTRA_SONGS, Song::class.java)
+            ?.distinct()?.toMutableList() ?: mutableListOf()
+
+        if (songs.isEmpty()) {
+            return MaterialAlertDialogBuilder(requireContext())
+                .setMessage(R.string.an_unexpected_error_occurred)
+                .setPositiveButton(android.R.string.ok, null)
+                .create()
+        }
 
         if (hasR()) {
             val deleteResultLauncher =

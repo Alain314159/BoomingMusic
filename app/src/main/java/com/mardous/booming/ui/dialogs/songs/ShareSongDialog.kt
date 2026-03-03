@@ -17,6 +17,7 @@
 
 package com.mardous.booming.ui.dialogs.songs
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -31,7 +32,11 @@ import com.mardous.booming.ui.dialogs.ShareStoryDialog
 class ShareSongDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val song = BundleCompat.getParcelable(requireArguments(), EXTRA_SONG, Song::class.java)!!
+        val song = BundleCompat.getParcelable(requireArguments(), EXTRA_SONG, Song::class.java)
+            ?: return MaterialAlertDialogBuilder(requireContext())
+                .setMessage(R.string.an_unexpected_error_occurred)
+                .setPositiveButton(android.R.string.ok, null)
+                .create()
         val items = arrayOf(
             getString(R.string.the_audio_file),
             getString(R.string.i_am_listening),

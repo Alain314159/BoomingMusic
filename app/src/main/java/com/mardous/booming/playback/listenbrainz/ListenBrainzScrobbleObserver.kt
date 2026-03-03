@@ -174,18 +174,18 @@ class ListenBrainzScrobbleObserver(
     private fun shouldScrobble(mediaItem: MediaItem, playedDurationMs: Long): Boolean {
         // Try Media3 standard duration first, then fall back to metadata extras
         val trackDurationMs = when {
-            mediaItem.mediaMetadata.durationMs != null && mediaItem.mediaMetadata.durationMs!! > 0 -> 
+            mediaItem.mediaMetadata.durationMs?.let { it > 0 } == true ->
                 mediaItem.mediaMetadata.durationMs!!
             mediaItem.mediaMetadata.extras?.containsKey("duration") == true ->
                 mediaItem.mediaMetadata.extras?.getLong("duration") ?: 0L
             else -> 0L
         }
-        
+
         if (trackDurationMs <= 0) return false
-        
+
         // Regla: 30 segundos o 50% del track (lo que sea menor)
         val minDuration = minOf(30000L, trackDurationMs / 2)
-        
+
         return playedDurationMs >= minDuration
     }
     

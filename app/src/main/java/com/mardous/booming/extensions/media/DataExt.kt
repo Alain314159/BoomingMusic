@@ -42,7 +42,7 @@ import java.util.Locale
 
 fun Album.isArtistNameUnknown() = albumArtistName().isArtistNameUnknown()
 
-fun Album.albumArtistName() = if (albumArtistName.isNullOrBlank()) artistName else albumArtistName!!
+fun Album.albumArtistName() = albumArtistName.takeIf { !it.isNullOrBlank() } ?: artistName
 
 fun Album.displayArtistName() = albumArtistName().displayArtistName()
 
@@ -96,7 +96,7 @@ fun Song.isArtistNameUnknown() = artistName.isArtistNameUnknown()
 
 fun Song.displayArtistName() = artistName.displayArtistName()
 
-fun Song.albumArtistName() = if (albumArtistName.isNullOrBlank()) artistName else albumArtistName!!
+fun Song.albumArtistName() = albumArtistName.takeIf { !it.isNullOrBlank() } ?: artistName
 
 fun Song.songDurationStr() = duration.asReadableDuration()
 
@@ -106,7 +106,7 @@ fun Song.searchQuery(engine: WebSearchEngine): String {
             if (isArtistNameUnknown()) title else "$artistName $title"
 
         WebSearchEngine.Wikipedia ->
-            if (isArtistNameUnknown()) title else if (albumArtistName.isNullOrEmpty()) artistName.toAlbumArtistName() else albumArtistName!!
+            if (isArtistNameUnknown()) title else if (albumArtistName.isNullOrEmpty()) artistName.toAlbumArtistName() else albumArtistName.orEmpty()
     }
     return engine.getURLForQuery(searchQuery)
 }

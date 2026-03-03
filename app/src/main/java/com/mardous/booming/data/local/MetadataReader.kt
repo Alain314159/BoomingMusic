@@ -38,20 +38,16 @@ class MetadataReader(uri: Uri, readPictures: Boolean = false) : KoinComponent {
     }
 
     fun bitrate(): String? {
-        if (audioProperties == null || audioProperties!!.bitrate <= 0)
-            return null
-
-        return "${audioProperties!!.bitrate} kbps"
+        val bitrate = audioProperties?.bitrate.takeIf { it != null && it > 0 } ?: return null
+        return "$bitrate kbps"
     }
 
     fun sampleRate(): String? {
-        if (audioProperties == null || audioProperties!!.sampleRate <= 0)
-            return null
-
-        return if (audioProperties!!.sampleRate >= 1000) {
-            "%.1f kHz".format(audioProperties!!.sampleRate / 1000.0)
+        val sampleRate = audioProperties?.sampleRate.takeIf { it != null && it > 0 } ?: return null
+        return if (sampleRate >= 1000) {
+            "%.1f kHz".format(sampleRate / 1000.0)
         } else {
-            "${audioProperties!!.sampleRate} Hz"
+            "$sampleRate Hz"
         }
     }
 

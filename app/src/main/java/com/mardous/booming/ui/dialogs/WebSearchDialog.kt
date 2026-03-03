@@ -17,6 +17,7 @@
 
 package com.mardous.booming.ui.dialogs
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -35,7 +36,11 @@ import com.mardous.booming.extensions.withArgs
 class WebSearchDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val song = BundleCompat.getParcelable(requireArguments(), EXTRA_SONG, Song::class.java)!!
+        val song = BundleCompat.getParcelable(requireArguments(), EXTRA_SONG, Song::class.java)
+            ?: return MaterialAlertDialogBuilder(requireContext())
+                .setMessage(R.string.an_unexpected_error_occurred)
+                .setPositiveButton(android.R.string.ok, null)
+                .create()
 
         val engines = WebSearchEngine.entries.toTypedArray()
         val titles = engines.map { getString(it.nameRes) }.toTypedArray()
